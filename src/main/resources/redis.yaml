@@ -1,0 +1,34 @@
+singleServerConfig:
+  idleConnectionTimeout: 10000
+  pingTimeout: 1000
+  connectTimeout: 10000
+  timeout: 3000
+  retryAttempts: 3
+  retryInterval: 1500
+  reconnectionTimeout: 3000
+  failedAttempts: 3
+  subscriptionsPerConnection: 5
+  sslEnableEndpointIdentification: true
+  sslProvider: "JDK"
+#  pingConnection: false
+  keepAlive: false
+  tcpNoDelay: false
+  address: "redis://127.0.0.1:6379"
+  subscriptionConnectionMinimumIdleSize: 1
+  subscriptionConnectionPoolSize: 50
+  connectionMinimumIdleSize: 10
+  connectionPoolSize: 64
+  database: 0
+#  dnsMonitoring: true
+  dnsMonitoringInterval: 5000
+threads: 16
+nettyThreads: 32
+referenceEnabled: true
+transportMode: "NIO"
+lockWatchdogTimeout: 30000
+keepPubSubOrder: true
+decodeInExecutor: false
+useScriptCache: false
+minCleanUpDelay: 5
+maxCleanUpDelay: 1800
+addressResolverGroupFactory: !<org.redisson.connection.DnsAddressResolverGroupFactory> {}

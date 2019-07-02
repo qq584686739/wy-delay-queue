@@ -8,11 +8,11 @@
         <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.wy.queue</groupId>
-    <artifactId>wy-delay-queue</artifactId>
+    <groupId>com.zilean.queue</groupId>
+    <artifactId>zilean-queue</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>wy-delay-queue</name>
-    <description>wy-delay-queue</description>
+    <name>zilean-queue</name>
+    <description>zilean-queue</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -28,6 +28,26 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.11.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.20</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
