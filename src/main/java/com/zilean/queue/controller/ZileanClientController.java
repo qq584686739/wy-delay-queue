@@ -33,11 +33,23 @@ public class ZileanClientController {
     @Resource
     private ZileanService zileanClientServiceImpl;
 
-    // TODO: 2019-07-02 设计数据库
-    // TODO: 2019-07-02 做放重复提交
-    // TODO: 2019-07-01 post
+    // TODO: 2019-07-03 readme
+    // TODO: 2019-07-03 local dev test prod 环境
+    // TODO: 2019-07-03 admin 页面 Thymeleaf
+    // TODO: 2019-07-03 完善pom文件
 
-    // TODO: 2019-07-02 做修改的话，修改数据直接修改数据库即可，但是要校验job是未执行的job ，如果修改时间的话，先删除再添加。
+
+    // TODO: 2019-07-02 设计数据库
+    // TODO: 2019-07-03 mybatis generator ？jpa？
+    // TODO: 2019-07-03 druid 配置
+
+
+    // TODO: 2019-07-02 做防重复提交
+    // TODO: 2019-07-01 post，最后需要改成post方式，临时写成get测试
+
+    // TODO: 2019-07-03 topic job 开发
+
+
     @GetMapping("/publish")
     public ZileanResponse publish(SimpleDelayJob simpleDelayJob) {
         simpleDelayJob.check();
