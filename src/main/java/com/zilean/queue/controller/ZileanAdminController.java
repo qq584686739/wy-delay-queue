@@ -1,6 +1,6 @@
 package com.zilean.queue.controller;
 
-import com.zilean.queue.domain.ZileanJob;
+import com.zilean.queue.domain.ZileanDelayJob;
 import com.zilean.queue.domain.response.ZileanResponse;
 import com.zilean.queue.redis.RedissonUtil;
 import org.redisson.api.RScoredSortedSet;
@@ -22,6 +22,6 @@ public class ZileanAdminController {
     public ZileanResponse getJob(String id) {
         RedissonClient redissonClient = RedissonUtil.getRedissonClient();
         RScoredSortedSet<Object> scoredSortedSet = redissonClient.getScoredSortedSet("hello");
-        return ZileanResponse.success((ZileanJob) scoredSortedSet.first());
+        return ZileanResponse.success((ZileanDelayJob) scoredSortedSet.first());
     }
 }

@@ -1,6 +1,6 @@
 //package com.zilean.queue.domain.response;
 //
-//import com.zilean.queue.domain.ZileanJob;
+//import com.zilean.queue.domain.ZileanDelayJob;
 //import com.zilean.queue.exception.ZileanExceptionEnum;
 //
 ///**
@@ -14,7 +14,7 @@
 //        return new ZileanResponse<>();
 //    }
 //
-//    public static ZileanResponse success(ZileanJob data) {
+//    public static ZileanResponse success(ZileanDelayJob data) {
 //        return new ZileanResponse<>(0, "", data);
 //    }
 //

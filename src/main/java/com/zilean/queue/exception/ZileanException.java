@@ -10,7 +10,7 @@ public class ZileanException extends RuntimeException {
 
     private ZileanExceptionEnum bizExceptionEnum;
 
-    ZileanException() {
+    public ZileanException() {
     }
 
     public ZileanException(ZileanExceptionEnum bizExceptionEnum) {

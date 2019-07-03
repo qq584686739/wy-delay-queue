@@ -1,6 +1,6 @@
 package com.zilean.queue.service;
 
-import com.zilean.queue.domain.ZileanJob;
+import com.zilean.queue.domain.ZileanDelayJob;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface ZileanService {
      * @param job job
      * @return int
      */
-    int insert(ZileanJob job);
+    int insert(ZileanDelayJob job);
 
     /**
      * 删除任务
@@ -45,13 +45,13 @@ public interface ZileanService {
      * @param job job
      * @return int
      */
-    int updateById(ZileanJob job);
+    int updateById(ZileanDelayJob job);
 
     /**
      * 查找任务
      *
      * @param id id
-     * @return ZileanJob
+     * @return ZileanDelayJob
      */
-    ZileanJob selectById(String id);
+    ZileanDelayJob selectById(String id);
 }

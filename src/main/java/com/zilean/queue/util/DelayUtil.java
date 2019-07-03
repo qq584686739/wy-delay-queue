@@ -14,11 +14,6 @@ public class DelayUtil {
     }
 
     /**
-     * 最大的延迟时间，单位：秒，最大为72小时（3天）
-     */
-    public static final long MAX_DELAY_TIME = 60 * 60 * 24 * 3L;
-
-    /**
      * 根据delay获取绝对时间分数
      * 返回时间格式为:yyyyMMddHHmmss.0
      *

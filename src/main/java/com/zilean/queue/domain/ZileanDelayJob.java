@@ -11,7 +11,7 @@ import java.io.Serializable;
  * created on 2019-07-01 20:30
  */
 @Data
-public abstract class ZileanJob implements Serializable {
+public abstract class ZileanDelayJob implements Serializable {
 
     /**
      * jobId
@@ -21,14 +21,12 @@ public abstract class ZileanJob implements Serializable {
     /**
      * 延迟时间
      */
-    protected String delay;
+    protected int delay;
 
     /**
      * 校验参数
      * true : 合法
      * false: 不合法
-     *
-     * @return boolean
      */
-    abstract boolean checkParam();
+    abstract void check();
 }

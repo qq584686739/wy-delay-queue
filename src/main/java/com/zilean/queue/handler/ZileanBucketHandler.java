@@ -3,9 +3,7 @@ package com.zilean.queue.handler;
 import com.zilean.queue.redis.RedissonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;
-import org.redisson.api.RFuture;
-
-import java.util.concurrent.TimeUnit;
+import org.redisson.api.RDelayedQueue;
 
 import static com.zilean.queue.constant.ZileanConstant.BUCKET_NAME;
 
@@ -22,23 +20,20 @@ public class ZileanBucketHandler implements Runnable {
         // TODO: 2019-07-02 这里加上host port
         log.info("zilean bucket handler running...");
 
-        RBlockingQueue<String> queue = RedissonUtil.getRedissonClient().getBlockingQueue(BUCKET_NAME);
+        // TODO: 2019-07-03 还在犹豫是否使用多个bucket
+        RBlockingQueue<String> bucket = RedissonUtil.getRedissonClient().getBlockingQueue(BUCKET_NAME);
+        RDelayedQueue<String> delayedQueue = RedissonUtil.getRedissonClient().getDelayedQueue(bucket);
 
-        RFuture<String> take;
+        String take = null;
         for (; ; ) {
-            take = queue.takeAsync();
-            if (!take.isSuccess()) {
-                try {
-                    take.await(10, TimeUnit.SECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
+            try {
+                take = bucket.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            String now = take.getNow();
 
             // TODO: 2019-07-02 业务处理
-            log.info("take = {}.", now);
+            log.info("result = {}.", take);
         }
     }
 }

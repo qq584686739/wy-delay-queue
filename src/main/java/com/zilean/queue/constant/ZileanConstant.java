@@ -18,4 +18,9 @@ public class ZileanConstant {
      */
     public static final String BUCKET_NAME = PROJECT_NAME + "ZILEAN-BUCKET";
 
+    public static final int MAX_DELAY_15_DAYS = 1296000;
+    public static final int MAX_BODY_LENGTH = 2000;
+    public static final String[] INVALID_SIGIN = new String[]{"@", "#", "$", "%", "^", "&", "*"};
+
+
 }

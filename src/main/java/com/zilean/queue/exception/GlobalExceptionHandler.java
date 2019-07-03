@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NullPointerException.class)
     public ZileanResponse nullPointerException(HttpServletRequest request) {
-        log.error("空指针异常 ：uri: {}." , request.getRequestURI());
+        log.error("空指针异常 ：uri: {}.", request.getRequestURI());
         return new ZileanResponse<>(ZileanExceptionEnum.ERROR_SYSTEM_BUSY);
     }
 
@@ -63,6 +63,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ZileanException.class)
     public ZileanResponse bizException(ZileanException e) {
+        log.error("[error]{}.", e.getBizExceptionEnum().toString());
         return new ZileanResponse<>(e.getBizExceptionEnum());
     }
 

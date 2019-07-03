@@ -11,9 +11,9 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TopicJob extends ZileanJob {
+public class TopicDelayJob extends ZileanDelayJob {
     @Override
-    public boolean checkParam() {
-        return false;
+    void check() {
+
     }
 }
