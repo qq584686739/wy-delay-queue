@@ -5,13 +5,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.util.StringUtils;
 
+import static com.zilean.queue.constant.ZileanConstant.HTTPS_PREFIX;
+import static com.zilean.queue.constant.ZileanConstant.HTTP_PREFIX;
 import static com.zilean.queue.constant.ZileanConstant.MAX_BODY_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_DELAY_15_DAYS;
+import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
+import static com.zilean.queue.constant.ZileanConstant.OPT_DELETE;
+import static com.zilean.queue.constant.ZileanConstant.OPT_INSERT;
+import static com.zilean.queue.constant.ZileanConstant.OPT_UPDATE;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_BODY;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_CALLBACK;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_DELAY;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_ID;
-import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_ISAPPEND;
 
 /**
  * 描述:
@@ -39,38 +44,78 @@ public class SimpleDelayJob extends ZileanDelayJob {
      */
     private String body;
 
-    /**
-     * 是否追加操作。0false；1true
-     * 默认0
-     */
-    private Integer isAppend = 0;
-
     @Override
-    public void check() {
-        if (null == id || StringUtils.isEmpty(id.trim())) {
-            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID);
-        }
-        if (this.delay < 0 || this.delay > MAX_DELAY_15_DAYS) {
-            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
-        }
+    public void check(int opt) {
+        switch (opt) {
+            case OPT_INSERT:
+                checkId();
+                checkDelay();
+                checkBody(false);
+                checkCallBack(false);
+                checkHeader(true);
+                break;
 
-        String httpPrefix = "http://";
-        String httpsPrefix = "https://";
+            case OPT_APPEND:
+                checkId();
+                checkBody(false);
+                checkHeader(true);
+                break;
+
+            case OPT_UPDATE:
+                checkId();
+                checkDelay();
+                checkBody(true);
+                checkCallBack(true);
+                checkHeader(true);
+                break;
+
+            case OPT_DELETE:
+                checkId();
+                break;
+            default:
+        }
+    }
+
+    private void checkHeader(boolean canEmpty) {
+        // TODO: 2019-07-03 check header，校验header的格式，还有特殊字符的校验
+//        INVALID_SIGIN
+    }
+
+    private void checkCallBack(boolean canEmpty) {
+        if (canEmpty && StringUtils.isEmpty(this.callBack)) {
+            return;
+        }
         boolean isCallbackValid = StringUtils.isEmpty(this.callBack) ||
-            !this.callBack.startsWith(httpPrefix) && !this.callBack.startsWith(httpsPrefix);
+            !this.callBack.startsWith(HTTP_PREFIX) && !this.callBack.startsWith(HTTPS_PREFIX);
         if (isCallbackValid) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_CALLBACK);
         }
+    }
 
-        // TODO: 2019-07-03 header
-//        INVALID_SIGIN
+    private void checkBody(boolean canEmpty) {
+        if (canEmpty) {
+            if (this.body == null || this.body.trim().isEmpty()) {
+                return;
+            }
+            if (this.body.length() > MAX_BODY_LENGTH) {
+                throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_BODY);
+            }
+        }
 
         if (this.body == null || this.body.trim().isEmpty() || this.body.length() > MAX_BODY_LENGTH) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_BODY);
         }
+    }
 
-        if (0 != this.isAppend && 1 != this.isAppend) {
-            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ISAPPEND);
+    private void checkDelay() {
+        if (this.delay < 0 || this.delay > MAX_DELAY_15_DAYS) {
+            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
+        }
+    }
+
+    private void checkId() {
+        if (null == id || StringUtils.isEmpty(id.trim())) {
+            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID);
         }
     }
 }

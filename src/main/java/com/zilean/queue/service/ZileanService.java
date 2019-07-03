@@ -36,7 +36,7 @@ public interface ZileanService {
      * @param idList idList
      * @return int
      */
-    int deleteById(List<String> idList);
+    int deleteByIdList(List<String> idList);
 
     /**
      * 更新任务
@@ -48,10 +48,21 @@ public interface ZileanService {
     int updateById(ZileanDelayJob job);
 
     /**
+     * 追加任务
+     * 返回影响job的个数
+     *
+     * @param job job
+     * @return int
+     */
+    int appendById(ZileanDelayJob job);
+
+    /**
      * 查找任务
      *
      * @param id id
      * @return ZileanDelayJob
      */
     ZileanDelayJob selectById(String id);
+
+
 }

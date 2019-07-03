@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThreadPoolExecutorUtil {
 
+    // TODO: 2019-07-04 线程池全部要设置下限与上线
+
     private static final Logger logger = LoggerFactory.getLogger(ThreadPoolExecutorUtil.class);
 
     private static final int DEFAULT_LIMIT = 10;

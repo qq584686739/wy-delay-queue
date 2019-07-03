@@ -32,12 +32,17 @@ public abstract class AbstractZileanService implements ZileanService {
     }
 
     @Override
-    public int deleteById(List<String> idList) {
+    public int deleteByIdList(List<String> idList) {
         return 0;
     }
 
     @Override
     public int updateById(ZileanDelayJob job) {
+        return 0;
+    }
+
+    @Override
+    public int appendById(ZileanDelayJob job) {
         return 0;
     }
 

@@ -50,6 +50,10 @@ public class ZileanResponse<T extends ZileanDelayJob> {
         return new ZileanResponse<>(code, msg);
     }
 
+    public static ZileanResponse error() {
+        return new ZileanResponse<>(ZileanExceptionEnum.ERROR_SYSTEM_BUSY);
+    }
+
     public static ZileanResponse error(ZileanExceptionEnum zileanExceptionEnum) {
         return new ZileanResponse<>(zileanExceptionEnum);
     }

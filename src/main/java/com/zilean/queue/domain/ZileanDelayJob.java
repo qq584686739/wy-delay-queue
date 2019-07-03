@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Data
 public abstract class ZileanDelayJob implements Serializable {
 
+    private static final long serialVersionUID = 6266181599908960090L;
     /**
      * jobId
      */
@@ -27,6 +28,8 @@ public abstract class ZileanDelayJob implements Serializable {
      * 校验参数
      * true : 合法
      * false: 不合法
+     *
+     * @param opt opt
      */
-    abstract void check();
+    abstract void check(int opt);
 }

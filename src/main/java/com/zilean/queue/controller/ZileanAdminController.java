@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin")
 public class ZileanAdminController {
-    // TODO: 2019-07-03 管理端接口
-    // TODO: 2019-07-02 做修改的话，修改数据直接修改数据库即可，但是要校验job是未执行的job ，如果修改时间的话，先删除再添加。
+    // TODO: 2019-07-03 管理端接口,增删改查
 
     @GetMapping("/job")
     public ZileanResponse getJob(String id) {

@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.concurrent.ExecutorService;
 
+import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
+import static com.zilean.queue.constant.ZileanConstant.OPT_DELETE;
+import static com.zilean.queue.constant.ZileanConstant.OPT_INSERT;
+import static com.zilean.queue.constant.ZileanConstant.OPT_UPDATE;
+import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PUBLISH_JOB_ERROR;
+import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_FOR_NOT_FOUNT_JOB;
+
 /**
  * 描述:
  *
@@ -33,10 +40,10 @@ public class ZileanClientController {
     @Resource
     private ZileanService zileanClientServiceImpl;
 
-    // TODO: 2019-07-03 readme
-    // TODO: 2019-07-03 local dev test prod 环境
-    // TODO: 2019-07-03 admin 页面 Thymeleaf
-    // TODO: 2019-07-03 完善pom文件
+    // TODO: 2019-07-03 readme文件
+    // TODO: 2019-07-03 准备local dev test prod 环境
+    // TODO: 2019-07-03 admin 页面：Thymeleaf
+    // TODO: 2019-07-03 完善pom文件其他信息
 
 
     // TODO: 2019-07-02 设计数据库
@@ -46,14 +53,46 @@ public class ZileanClientController {
 
     // TODO: 2019-07-02 做防重复提交
     // TODO: 2019-07-01 post，最后需要改成post方式，临时写成get测试
+    // TODO: 2019-07-04 回调需要设置timeout 重试机制 失败队列
 
     // TODO: 2019-07-03 topic job 开发
 
 
+    // TODO: 2019-07-04 用户的概念
+
     @GetMapping("/publish")
     public ZileanResponse publish(SimpleDelayJob simpleDelayJob) {
-        simpleDelayJob.check();
-        zileanClientServiceImpl.insert(simpleDelayJob);
+        simpleDelayJob.check(OPT_INSERT);
+        if (1 != zileanClientServiceImpl.insert(simpleDelayJob)) {
+            return ZileanResponse.error(ERROR_ADD_JOB_FOR_PUBLISH_JOB_ERROR);
+        }
+        return ZileanResponse.success();
+    }
+
+    @GetMapping("/append")
+    public ZileanResponse append(SimpleDelayJob simpleDelayJob) {
+        simpleDelayJob.check(OPT_APPEND);
+        if (1 != zileanClientServiceImpl.appendById(simpleDelayJob)) {
+            return ZileanResponse.error(ERROR_FOR_NOT_FOUNT_JOB);
+        }
+        return ZileanResponse.success();
+    }
+
+    @GetMapping("/update")
+    public ZileanResponse update(SimpleDelayJob simpleDelayJob) {
+        simpleDelayJob.check(OPT_UPDATE);
+        if (1 != zileanClientServiceImpl.updateById(simpleDelayJob)) {
+            return ZileanResponse.error(ERROR_FOR_NOT_FOUNT_JOB);
+        }
+        return ZileanResponse.success();
+    }
+
+    @GetMapping("/delete")
+    public ZileanResponse delete(SimpleDelayJob simpleDelayJob) {
+        simpleDelayJob.check(OPT_DELETE);
+        if (1 != zileanClientServiceImpl.deleteById(simpleDelayJob.getId())) {
+            return ZileanResponse.error(ERROR_FOR_NOT_FOUNT_JOB);
+        }
         return ZileanResponse.success();
     }
 }

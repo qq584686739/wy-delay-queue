@@ -1,5 +1,8 @@
 package com.zilean.queue.constant;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 描述:
  *
@@ -22,5 +25,13 @@ public class ZileanConstant {
     public static final int MAX_BODY_LENGTH = 2000;
     public static final String[] INVALID_SIGIN = new String[]{"@", "#", "$", "%", "^", "&", "*"};
 
+    public static final int OPT_INSERT = 0;
+    public static final int OPT_APPEND = 1;
+    public static final int OPT_UPDATE = 2;
+    public static final int OPT_DELETE = 3;
+    public static final List<Integer> OPT_LIST = Arrays.asList(OPT_INSERT, OPT_APPEND, OPT_UPDATE, OPT_DELETE);
 
+
+    public static final String HTTP_PREFIX = "http://";
+    public static final String HTTPS_PREFIX = "https://";
 }
