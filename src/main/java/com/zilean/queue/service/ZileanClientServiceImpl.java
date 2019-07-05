@@ -73,6 +73,9 @@ public class ZileanClientServiceImpl extends AbstractZileanService implements Zi
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int appendById(ZileanDelayJob job) {
+
+        // TODO: 2019-07-05 校验append的length和现有的length长度，总长度不得超过指定值，超过则报错
+
         if (delayedQueue.contains(job.getId())) {
             // TODO: 2019-07-03 查询db，计算delay，update db
             if (delayedQueue.remove(job.getId())) {

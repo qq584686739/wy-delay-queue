@@ -25,6 +25,11 @@ public abstract class ZileanDelayJob implements Serializable {
     protected int delay;
 
     /**
+     * token
+     */
+    protected String token;
+
+    /**
      * 校验参数
      * true : 合法
      * false: 不合法

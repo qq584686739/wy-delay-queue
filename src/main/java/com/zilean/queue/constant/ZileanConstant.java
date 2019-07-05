@@ -23,6 +23,9 @@ public class ZileanConstant {
 
     public static final int MAX_DELAY_15_DAYS = 1296000;
     public static final int MAX_BODY_LENGTH = 2000;
+    public static final int MAX_ID_LENGTH = 20;
+    public static final int MAX_CALLBACK_LENGTH = 200;
+
     public static final String[] INVALID_SIGIN = new String[]{"@", "#", "$", "%", "^", "&", "*"};
 
     public static final int OPT_INSERT = 0;
@@ -34,4 +37,10 @@ public class ZileanConstant {
 
     public static final String HTTP_PREFIX = "http://";
     public static final String HTTPS_PREFIX = "https://";
+
+    /**
+     * 客户端的请求需要对token进行校验，校验token的路径拦截器需要的path
+     */
+    public static final String CLIENT_PATH_PATTERN = "/client/**";
+
 }

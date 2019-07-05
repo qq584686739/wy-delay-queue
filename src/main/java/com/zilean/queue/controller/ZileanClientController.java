@@ -40,6 +40,8 @@ public class ZileanClientController {
     @Resource
     private ZileanService zileanClientServiceImpl;
 
+    // TODO: 2019-07-04 add logback.xml
+
     // TODO: 2019-07-03 readme文件
     // TODO: 2019-07-03 准备local dev test prod 环境
     // TODO: 2019-07-03 admin 页面：Thymeleaf
@@ -58,7 +60,7 @@ public class ZileanClientController {
     // TODO: 2019-07-03 topic job 开发
 
 
-    // TODO: 2019-07-04 用户的概念
+    // TODO: 2019-07-04 用户的概念，token等。
 
     @GetMapping("/publish")
     public ZileanResponse publish(SimpleDelayJob simpleDelayJob) {

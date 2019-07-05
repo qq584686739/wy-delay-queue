@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class ZileanQueueApplication {
 
+    // TODO: 2019-07-05 init data
+
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(ZileanQueueApplication.class);
         application.addListeners(new ZileanApplicationListener());
