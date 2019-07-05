@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 
 import static com.zilean.queue.constant.ZileanConstant.HTTPS_PREFIX;
 import static com.zilean.queue.constant.ZileanConstant.HTTP_PREFIX;
+import static com.zilean.queue.constant.ZileanConstant.MAX_CALLBACK_LENGTH;
+import static com.zilean.queue.constant.ZileanConstant.MAX_ID_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_BODY_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_DELAY_15_DAYS;
 import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
@@ -15,8 +17,10 @@ import static com.zilean.queue.constant.ZileanConstant.OPT_INSERT;
 import static com.zilean.queue.constant.ZileanConstant.OPT_UPDATE;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_BODY;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_CALLBACK;
+import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_CALLBACK_BEYOND_LENGTH;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_DELAY;
 import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_ID;
+import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PARAM_ID_BEYOND_LENGTH;
 
 /**
  * 描述:
@@ -44,11 +48,17 @@ public class SimpleDelayJob extends ZileanDelayJob {
      */
     private String body;
 
+    /**
+     * 回调超时时间，由业务方指控，当然，我们也有默认值
+     */
+    private long ttr;
+
     @Override
     public void check(int opt) {
+        checkId();
+        // TODO: 2019-07-05 check ttr
         switch (opt) {
             case OPT_INSERT:
-                checkId();
                 checkDelay();
                 checkBody(false);
                 checkCallBack(false);
@@ -56,13 +66,11 @@ public class SimpleDelayJob extends ZileanDelayJob {
                 break;
 
             case OPT_APPEND:
-                checkId();
                 checkBody(false);
                 checkHeader(true);
                 break;
 
             case OPT_UPDATE:
-                checkId();
                 checkDelay();
                 checkBody(true);
                 checkCallBack(true);
@@ -70,7 +78,6 @@ public class SimpleDelayJob extends ZileanDelayJob {
                 break;
 
             case OPT_DELETE:
-                checkId();
                 break;
             default:
         }
@@ -89,6 +96,9 @@ public class SimpleDelayJob extends ZileanDelayJob {
             !this.callBack.startsWith(HTTP_PREFIX) && !this.callBack.startsWith(HTTPS_PREFIX);
         if (isCallbackValid) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_CALLBACK);
+        }
+        if(MAX_CALLBACK_LENGTH < this.callBack.length()){
+            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_CALLBACK_BEYOND_LENGTH);
         }
     }
 
@@ -116,6 +126,9 @@ public class SimpleDelayJob extends ZileanDelayJob {
     private void checkId() {
         if (null == id || StringUtils.isEmpty(id.trim())) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID);
+        }
+        if(MAX_ID_LENGTH < id.length()){
+            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID_BEYOND_LENGTH);
         }
     }
 }
