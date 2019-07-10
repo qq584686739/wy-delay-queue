@@ -1,0 +1,143 @@
+<div style="padding: 15px;"></div>
+
+<div class="layui-fluid layui-col-space15">
+    <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                当日访问量
+                <span class="layui-badge layui-bg-blue layuiadmin-badge">日</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <p class="layuiadmin-big-font" id="visitNumberForToday"></p>
+                <p>
+                    总计访问量
+                    <span class="layuiadmin-span-color" id="visitNumberForTotal"></span>
+                    <i class="layui-inline layui-icon layui-icon-flag"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                当前延迟数
+                <span class="layui-badge layui-bg-cyan layuiadmin-badge">秒</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <p class="layuiadmin-big-font" id="curDelayed"></p>
+                <p>
+                    总延迟数
+                    <span class="layuiadmin-span-color" id="curDelayedTotal"></span>
+                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                当前读取数
+                <span class="layui-badge layui-bg-green layuiadmin-badge">秒</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+
+                <p class="layuiadmin-big-font" id="curReady"></p>
+                <p>
+                    总读取数
+                    <span class="layuiadmin-span-color" id="curReadyTotal"></span>
+                    <i class="layui-inline layui-icon layui-icon-dollar"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                当前失败队列数
+                <span class="layui-badge layui-bg-orange layuiadmin-badge">秒</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+
+                <p class="layuiadmin-big-font" id="curFailed"></p>
+                <p>
+                    总失败队列数
+                    <span class="layuiadmin-span-color" id="curFailedTotal"></span>
+                    <i class="layui-inline layui-icon layui-icon-user"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br/>
+
+<!--日访问量-->
+<div id="dailyVisitsMain" class="layui-fluid" style="
+             /*padding-top: 200px;*/
+             height: 50%;
+             width: 90%;
+             /*-webkit-tap-highlight-color: transparent;*/
+             /*user-select: none;*/
+             /*position: relative;*/
+             position: center
+             /*background: rgba(252, 252, 252, 0);*/">
+</div>
+
+<!--今日延迟数-->
+<div style="padding: 70px;"></div>
+<hr class="layui-bg-blue">
+<div id="curDelayNumMain" class="layui-fluid" style="
+             /*padding-top: 200px;*/
+             height: 50%;
+             width: 100%;
+             -webkit-tap-highlight-color: transparent;
+             /*user-select: none;*/
+             /*position: relative;*/
+             /*position: center*/
+             background: rgba(252, 252, 252, 0);">
+</div>
+
+<!--今日读取数-->
+<div style="padding: 70px;"></div>
+<hr class="layui-bg-blue">
+<div id="curReadyNumMain" class="layui-fluid" style="
+             /*padding-top: 200px;*/
+             height: 50%;
+             width: 100%;
+             -webkit-tap-highlight-color: transparent;
+             /*user-select: none;*/
+             /*position: relative;*/
+             /*position: center*/
+             background: rgba(252, 252, 252, 0);">
+</div>
+
+<!--今日成功数-->
+<div style="padding: 70px;"></div>
+<hr class="layui-bg-blue">
+<div id="curSuccessNumMain" class="layui-fluid" style="
+             /*padding-top: 200px;*/
+             height: 50%;
+             width: 100%;
+             -webkit-tap-highlight-color: transparent;
+             /*user-select: none;*/
+             /*position: relative;*/
+             /*position: center*/
+             background: rgba(252, 252, 252, 0);">
+</div>
+
+<!--今日失败数-->
+<div style="padding: 70px;"></div>
+<hr class="layui-bg-blue">
+<div id="curFailedNumMain" class="layui-fluid" style="
+             /*padding-top: 200px;*/
+             height: 50%;
+             width: 100%;
+             -webkit-tap-highlight-color: transparent;
+             /*user-select: none;*/
+             /*position: relative;*/
+             /*position: center*/
+             background: rgba(252, 252, 252, 0);">
+</div>

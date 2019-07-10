@@ -1,5 +1,6 @@
 package com.zilean.queue.domain;
 
+import com.zilean.queue.domain.response.ResponseAble;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * created on 2019-07-01 20:30
  */
 @Data
-public abstract class ZileanDelayJob implements Serializable {
+public abstract class ZileanDelayJob implements Serializable, ResponseAble {
 
     private static final long serialVersionUID = 6266181599908960090L;
     /**

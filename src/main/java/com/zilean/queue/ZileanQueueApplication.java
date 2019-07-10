@@ -1,6 +1,8 @@
 package com.zilean.queue;
 
+import com.zilean.queue.handler.ZileanInitHandler;
 import com.zilean.queue.listener.ZileanApplicationListener;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @SpringBootApplication
 @EnableTransactionManagement
-public class ZileanQueueApplication {
+public class ZileanQueueApplication implements CommandLineRunner {
 
     // TODO: 2019-07-05 init data
 
@@ -21,5 +23,10 @@ public class ZileanQueueApplication {
         SpringApplication application = new SpringApplication(ZileanQueueApplication.class);
         application.addListeners(new ZileanApplicationListener());
         application.run(args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        ZileanInitHandler.run();
     }
 }

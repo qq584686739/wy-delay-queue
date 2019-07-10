@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Zilean 延迟队列 管理中心</title>
+    <link rel="stylesheet" href="layui/css/layui.css?t=2">
+    <link rel="stylesheet" href="layui/css/my.css?t=2">
+    <script src="./js/echarts.min.js"></script>
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">Zilean 延迟队列 管理中心</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">任务管理</a></li>
+            <li class="layui-nav-item"><a href="">ABCDEFG</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">AAA</a></dd>
+                    <dd><a href="">BBB</a></dd>
+                    <dd><a href="">CCC</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    这是我的用户名
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">任务管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" id="delayed">延迟任务列表</a></dd>
+                        <dd><a href="javascript:;" id="ready">读取任务列表</a></dd>
+                        <dd><a href="javascript:;" id="failed">失败任务列表</a></dd>
+                        <dd><a href="" id="add">添加任务</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">权限管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">用户管理</a></dd>
+                        <dd><a href="javascript:;">角色管理</a></dd>
+                        <dd><a href="">权限管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">系统监控</a></li>
+                <li class="layui-nav-item"><a href="">系统监控2</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!--<div class="layui-body layui-bg-gray" id="indexBody">-->
+    <div class="layui-body layui-bg-gray" id="indexBody">
+        <!--加载body-->
+    </div>
+
+    <div class="layui-footer layui-bg-green ">
+        <!-- 底部固定区域 -->
+        27wy.cn
+    </div>
+</div>
+<script src="layui/layui.js?20190705"></script>
+<!--<script src="layui/lay/modules/jquery.js?20190705"></script>-->
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/indexBody.js"></script>
+<script src="js/zileanGlobal.js"></script>
+<script>
+
+    // todo js时间戳更新
+
+    // todo 获取每日访问量
+    // todo 获取总访问量
+
+    // todo 获取当前延迟数
+    // todo 获取总延迟数
+    // todo 效果
+
+    // todo 获取当前读取数
+    // todo 获取总读取数
+    // todo 效果
+
+    // todo 获取当前失败队列数
+    // todo 获取总失败队列数
+    // todo 效果
+
+</script>
+
+<script>
+    // 加载body
+    $('#indexBody').load('./html/body/indexBody.html', function (responseTxt, statusTxt, xhr) {
+        if (statusTxt === "success") {
+            ajaxRequestAdminIndex();
+        }
+        if (statusTxt === "error") {
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+        }
+    });
+</script>
+
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+</script>
+
+</body>
+</html>

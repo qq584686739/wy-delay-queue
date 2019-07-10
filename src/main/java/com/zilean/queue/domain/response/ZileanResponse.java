@@ -1,6 +1,5 @@
 package com.zilean.queue.domain.response;
 
-import com.zilean.queue.domain.ZileanDelayJob;
 import com.zilean.queue.exception.ZileanExceptionEnum;
 
 import java.util.Objects;
@@ -11,7 +10,7 @@ import java.util.Objects;
  * @author xjh
  * created on 2019-07-01 21:01
  */
-public class ZileanResponse<T extends ZileanDelayJob> {
+public class ZileanResponse<T extends ResponseAble> {
     private int code;
     private String msg;
     private T data;
@@ -42,7 +41,7 @@ public class ZileanResponse<T extends ZileanDelayJob> {
         return new ZileanResponse<>();
     }
 
-    public static <T extends ZileanDelayJob> ZileanResponse success(T data) {
+    public static <T extends ResponseAble> ZileanResponse success(T data) {
         return new ZileanResponse<>(0, "", data);
     }
 

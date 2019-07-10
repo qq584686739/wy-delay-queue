@@ -8,7 +8,8 @@ import org.redisson.api.RedissonClient;
 
 import java.util.List;
 
-import static com.zilean.queue.constant.ZileanConstant.BUCKET_NAME;
+import static com.zilean.queue.constant.RedisConstant.BUCKET_NAME;
+
 
 /**
  * 描述:

@@ -2,13 +2,13 @@ package com.zilean.queue.controller;
 
 import com.zilean.queue.domain.SimpleDelayJob;
 import com.zilean.queue.domain.response.ZileanResponse;
-import com.zilean.queue.service.ZileanService;
+import com.zilean.queue.service.ZileanClientServiceImpl;
 import com.zilean.queue.util.ThreadPoolExecutorUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.concurrent.ExecutorService;
 
 import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
@@ -37,8 +37,8 @@ public class ZileanClientController {
      */
     private final ExecutorService addResultExec = ThreadPoolExecutorUtil.newCachedThreadPool();
 
-    @Resource
-    private ZileanService zileanClientServiceImpl;
+    @Autowired
+    private ZileanClientServiceImpl zileanClientServiceImpl;
 
     // TODO: 2019-07-04 add logback.xml
 
