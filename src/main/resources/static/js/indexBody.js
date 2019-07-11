@@ -6,22 +6,13 @@ var curReadyNumMainEcharts;
 var curReadyNumMainOption;
 var curReadyNumMainData = [];
 
-var curSuccessNumMainEcharts ;
-var curSuccessNumMainOption ;
+var curSuccessNumMainEcharts;
+var curSuccessNumMainOption;
 var curSuccessNumMainData = [];
 
-var curFailedNumMainEcharts ;
-var curFailedNumMainOption ;
+var curFailedNumMainEcharts;
+var curFailedNumMainOption;
 var curFailedNumMainData = [];
-
-
-
-/**
- * 获取监控数据，实时
- */
-function getRealTimeMonitor() {
-
-}
 
 /**
  * 数据格式化
@@ -190,12 +181,10 @@ function curDelay(data) {
 <!--今日读取数JS-->
 function curReady(data) {
     curReadyNumMainEcharts = echarts.init(document.getElementById('curReadyNumMain'));
-
     var length = data.length;
     for (var i = 0; i < length; i++) {
         curReadyNumMainData.push(formatData(data[i]));
     }
-
     curReadyNumMainOption = {
         title: {
             text: '今日读取数',
@@ -236,20 +225,17 @@ function curReady(data) {
             data: curReadyNumMainData
         }]
     };
-
     curReadyNumMainEcharts.setOption(curReadyNumMainOption);
 }
 
 
 <!--今日成功数JS-->
 function curSuccess(data) {
-     curSuccessNumMainEcharts = echarts.init(document.getElementById('curSuccessNumMain'));
-
+    curSuccessNumMainEcharts = echarts.init(document.getElementById('curSuccessNumMain'));
     var length = data.length;
     for (var i = 0; i < length; i++) {
         curSuccessNumMainData.push(formatData(data[i]));
     }
-
     curSuccessNumMainOption = {
         title: {
             text: '今日成功数',
@@ -290,21 +276,17 @@ function curSuccess(data) {
             data: curSuccessNumMainData
         }]
     };
-
     curSuccessNumMainEcharts.setOption(curSuccessNumMainOption);
 }
 
 
 <!--今日失败数JS-->
 function curFailed(data) {
-
-     curFailedNumMainEcharts = echarts.init(document.getElementById('curFailedNumMain'));
-
+    curFailedNumMainEcharts = echarts.init(document.getElementById('curFailedNumMain'));
     var length = data.length;
     for (var i = 0; i < length; i++) {
         curFailedNumMainData.push(formatData(data[i]));
     }
-
     curFailedNumMainOption = {
         title: {
             text: '今日失败数',
@@ -345,26 +327,7 @@ function curFailed(data) {
             data: curFailedNumMainData
         }]
     };
-
     curFailedNumMainEcharts.setOption(curFailedNumMainOption);
-    // curFailedNumMainEcharts.setOption({
-    //     series: [{
-    //         data: curFailedNumMainData
-    //     }]
-    // });
-    //
-    // setInterval(function () {
-    //
-    //     curFailedNumMainData.shift();
-    //     curFailedNumMainData.push(randomData());
-    //
-    //     curFailedNumMainEcharts.setOption(curFailedNumMainOption);
-    //     curFailedNumMainEcharts.setOption({
-    //         series: [{
-    //             data: curFailedNumMainData
-    //         }]
-    //     });
-    // }, 5000);
 }
 
 /**
@@ -439,6 +402,8 @@ function ajaxRequestAdminIndex() {
         // 渲染统计报表
         dailyVisits(result.data.historyData);
 
+
+        // 渲染历史数据
         $.get("/admin/realTimeMonitorHistory", function (result) {
             console.info(result);
             if (0 !== result.code) {
@@ -470,7 +435,9 @@ function ajaxRequestAdminIndex() {
     });
 }
 
-
+/**
+ * 定时器
+ */
 setInterval(function () {
     $.get("/admin/realTimeMonitor", function (result) {
         if (0 !== result.code) {
