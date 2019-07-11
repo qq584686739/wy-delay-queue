@@ -34,21 +34,36 @@
 <!--</table>-->
 
 <table class="layui-table" lay-data="{url:'/admin/jobList', page:true, id:'idTest'}"
-       lay-filter="demo">
+       lay-filter="demo" >
     <thead>
-    <tr>
-        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
-        <th lay-data="{field:'id', sort: true, fixed: true}">ID</th>
-        <th lay-data="{field:'username'}">用户名</th>
-        <th lay-data="{field:'sex', sort: true}">性别</th>
-        <th lay-data="{field:'city'}">城市</th>
-        <th lay-data="{field:'sign'}">签名</th>
-        <th lay-data="{field:'experience', sort: true}">积分</th>
 
-        <th lay-data="{field:'classify'}">职业</th>
-        <th lay-data="{field:'wealth', sort: true}">财富</th>
-        <th lay-data="{field:'score', sort: true, fixed: 'right'}">评分</th>
-        <th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}"></th>
+
+
+    <tr>
+        <!--<th lay-data="{type:'checkbox', fixed: 'left'}"></th>-->
+        <!--<th lay-data="{field:'id', sort: true, fixed: true}">ID</th>-->
+        <!--<th lay-data="{field:'username111'}">用户名</th>-->
+        <!--<th lay-data="{field:'sex222', sort: true}">性别</th>-->
+        <!--<th lay-data="{field:'city'}">城市</th>-->
+        <!--<th lay-data="{field:'sign'}">签名</th>-->
+        <!--<th lay-data="{field:'experience', sort: true}">积分</th>-->
+        <!--<th lay-data="{field:'classify'}">职业</th>-->
+        <!--<th lay-data="{field:'wealth', sort: true}">财富</th>-->
+        <!--<th lay-data="{field:'score', sort: true, fixed: 'right'}">评分</th>-->
+        <!--<th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}"></th>-->
+
+
+
+
+        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+        <th lay-data="{field:'jobId', sort: true, fixed: true}">JobID</th>
+        <th lay-data="{field:'delay'}">延迟时间</th>
+        <th lay-data="{field:'token', sort: true}">token</th>
+        <th lay-data="{field:'callBack'}">回调地址</th>
+        <th lay-data="{field:'header'}">回调请求头</th>
+        <th lay-data="{field:'body', sort: true}">回调body</th>
+        <th lay-data="{field:'ttr'}">回调超时时间</th>
+        <th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}">操作</th>
     </tr>
     </thead>
 </table>
@@ -72,7 +87,7 @@
         table.on('tool(demo)', function (obj) {
             var data = obj.data;
             if (obj.event === 'detail') {
-                layer.msg('ID：' + data.id + ' 的查看操作');
+                layer.msg('jobId：' + data.jobId + ' 的查看操作');
             } else if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
                     obj.del();

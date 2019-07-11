@@ -1,6 +1,6 @@
 package com.zilean.queue.service;
 
-import com.zilean.queue.domain.ZileanDelayJob;
+import com.zilean.queue.domain.BaseZileanJob;
 import com.zilean.queue.redis.RedissonUtil;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
@@ -23,7 +23,7 @@ public abstract class AbstractZileanService implements ZileanService {
     protected final RDelayedQueue<String> delayedQueue = redissonClient.getDelayedQueue(bucketBlockingQueue);
 
     @Override
-    public int insert(ZileanDelayJob job) {
+    public int insert(BaseZileanJob job) {
         return 0;
     }
 
@@ -38,17 +38,17 @@ public abstract class AbstractZileanService implements ZileanService {
     }
 
     @Override
-    public int updateById(ZileanDelayJob job) {
+    public int updateById(BaseZileanJob job) {
         return 0;
     }
 
     @Override
-    public int appendById(ZileanDelayJob job) {
+    public int appendById(BaseZileanJob job) {
         return 0;
     }
 
     @Override
-    public ZileanDelayJob selectById(String id) {
+    public BaseZileanJob selectById(String id) {
         return null;
     }
 }

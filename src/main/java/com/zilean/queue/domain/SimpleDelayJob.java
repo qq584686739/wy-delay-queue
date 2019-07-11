@@ -7,10 +7,10 @@ import org.springframework.util.StringUtils;
 
 import static com.zilean.queue.constant.ZileanConstant.HTTPS_PREFIX;
 import static com.zilean.queue.constant.ZileanConstant.HTTP_PREFIX;
-import static com.zilean.queue.constant.ZileanConstant.MAX_CALLBACK_LENGTH;
-import static com.zilean.queue.constant.ZileanConstant.MAX_ID_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_BODY_LENGTH;
+import static com.zilean.queue.constant.ZileanConstant.MAX_CALLBACK_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_DELAY_15_DAYS;
+import static com.zilean.queue.constant.ZileanConstant.MAX_ID_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
 import static com.zilean.queue.constant.ZileanConstant.OPT_DELETE;
 import static com.zilean.queue.constant.ZileanConstant.OPT_INSERT;
@@ -30,7 +30,7 @@ import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_P
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SimpleDelayJob extends ZileanDelayJob {
+public class SimpleDelayJob extends BaseZileanJob {
     private static final long serialVersionUID = 8806335947637844682L;
 
     /**
@@ -97,7 +97,7 @@ public class SimpleDelayJob extends ZileanDelayJob {
         if (isCallbackValid) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_CALLBACK);
         }
-        if(MAX_CALLBACK_LENGTH < this.callBack.length()){
+        if (MAX_CALLBACK_LENGTH < this.callBack.length()) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_CALLBACK_BEYOND_LENGTH);
         }
     }
@@ -127,7 +127,7 @@ public class SimpleDelayJob extends ZileanDelayJob {
         if (null == id || StringUtils.isEmpty(id.trim())) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID);
         }
-        if(MAX_ID_LENGTH < id.length()){
+        if (MAX_ID_LENGTH < id.length()) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID_BEYOND_LENGTH);
         }
     }

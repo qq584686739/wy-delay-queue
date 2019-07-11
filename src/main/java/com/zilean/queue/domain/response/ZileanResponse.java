@@ -10,10 +10,10 @@ import java.util.Objects;
  * @author xjh
  * created on 2019-07-01 21:01
  */
-public class ZileanResponse<T extends ResponseAble> {
-    private int code;
-    private String msg;
-    private T data;
+public class ZileanResponse<T> {
+    protected int code;
+    protected String msg;
+    protected T data;
 
     public ZileanResponse() {
         this(0, "", null);
@@ -21,6 +21,10 @@ public class ZileanResponse<T extends ResponseAble> {
 
     public ZileanResponse(int code) {
         this(code, "", null);
+    }
+
+    public ZileanResponse(T data) {
+        this(0, "", data);
     }
 
     public ZileanResponse(int code, String msg) {
@@ -41,7 +45,7 @@ public class ZileanResponse<T extends ResponseAble> {
         return new ZileanResponse<>();
     }
 
-    public static <T extends ResponseAble> ZileanResponse success(T data) {
+    public static <T> ZileanResponse success(T data) {
         return new ZileanResponse<>(0, "", data);
     }
 

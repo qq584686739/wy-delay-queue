@@ -37,10 +37,8 @@ function formatData(data) {
     }
 }
 
-
 // 报表统计JS
 function dailyVisits(data) {
-    console.info(data);
     var length = data.length;
     if (length <= 0) {
         return;
@@ -398,18 +396,18 @@ function ajaxRequestAdminIndex() {
         var curFailedTotalDoc = $("#curFailedTotal");
         curFailedTotalDoc.html(result.data.curFailedTotal);
 
-
         // 渲染统计报表
         dailyVisits(result.data.historyData);
 
-
         // 渲染历史数据
         $.get("/admin/realTimeMonitorHistory", function (result) {
+            console.info(111);
             console.info(result);
             if (0 !== result.code) {
                 return;
             }
-            var dataList = result.data.realTimeMonitorList;
+
+            var dataList = result.data;
             var length = dataList.length;
             if (length < 1) {
                 // todo 没有数据
@@ -438,12 +436,12 @@ function ajaxRequestAdminIndex() {
 /**
  * 定时器
  */
-setInterval(function () {
+indexT = setInterval(function () {
     $.get("/admin/realTimeMonitor", function (result) {
         if (0 !== result.code) {
             return;
         }
-        var dataList = result.data.realTimeMonitorList;
+        var dataList = result.data;
         var length = dataList.length;
         if (length < 1) {
             // todo 没有数据

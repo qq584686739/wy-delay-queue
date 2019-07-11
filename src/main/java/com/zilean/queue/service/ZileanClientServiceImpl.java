@@ -1,6 +1,6 @@
 package com.zilean.queue.service;
 
-import com.zilean.queue.domain.ZileanDelayJob;
+import com.zilean.queue.domain.BaseZileanJob;
 import com.zilean.queue.exception.ZileanException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_UPDATE_JOB;
 @Service
 public class ZileanClientServiceImpl extends AbstractZileanService implements ZileanService {
     @Override
-    public int insert(ZileanDelayJob job) {
+    public int insert(BaseZileanJob job) {
         // TODO: 2019-07-02 元数据入库
         delayedQueue.offerAsync(job.getId(), job.getDelay(), TimeUnit.SECONDS);
         return 1;
@@ -48,7 +48,7 @@ public class ZileanClientServiceImpl extends AbstractZileanService implements Zi
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int updateById(ZileanDelayJob job) {
+    public int updateById(BaseZileanJob job) {
         if (delayedQueue.contains(job.getId())) {
             int delay;
             if (0 != job.getDelay()) {
@@ -72,7 +72,7 @@ public class ZileanClientServiceImpl extends AbstractZileanService implements Zi
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int appendById(ZileanDelayJob job) {
+    public int appendById(BaseZileanJob job) {
 
         // TODO: 2019-07-05 校验append的length和现有的length长度，总长度不得超过指定值，超过则报错
 
@@ -92,7 +92,7 @@ public class ZileanClientServiceImpl extends AbstractZileanService implements Zi
     }
 
     @Override
-    public ZileanDelayJob selectById(String id) {
+    public BaseZileanJob selectById(String id) {
         return null;
     }
 }
