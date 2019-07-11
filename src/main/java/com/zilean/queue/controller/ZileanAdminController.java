@@ -4,7 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.zilean.queue.domain.ZileanDelayJob;
 import com.zilean.queue.domain.response.ZileanResponse;
 import com.zilean.queue.domain.vo.AdminIndexVO;
+import com.zilean.queue.domain.vo.RealTimeMonitorVO;
+import com.zilean.queue.domain.vo.RealTimeMonitorVO.RealTimeMonitor;
+import com.zilean.queue.enums.ZileanEnum;
 import com.zilean.queue.redis.RedissonUtil;
+import com.zilean.queue.util.DelayUtil;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,22 +91,22 @@ public class ZileanAdminController {
         result.setCurReadyTotal(112233L);
         result.setCurFailed(112233L);
         result.setCurFailedTotal(112233L);
-        result.setHistoryData(new ArrayList<AdminIndexVO.DailyReport>(){{
-            add(new AdminIndexVO.DailyReport(){{
+        result.setHistoryData(new ArrayList<AdminIndexVO.DailyReport>() {{
+            add(new AdminIndexVO.DailyReport() {{
                 setVisit(100L);
                 setDelayed(200L);
                 setReady(300L);
                 setFailed(400L);
                 setTime("2019/01/01");
             }});
-            add(new AdminIndexVO.DailyReport(){{
+            add(new AdminIndexVO.DailyReport() {{
                 setVisit(200L);
                 setDelayed(300L);
                 setReady(400L);
                 setFailed(500L);
                 setTime("2019/01/02");
             }});
-            add(new AdminIndexVO.DailyReport(){{
+            add(new AdminIndexVO.DailyReport() {{
                 setVisit(300L);
                 setDelayed(400L);
                 setReady(500L);
@@ -111,7 +115,153 @@ public class ZileanAdminController {
             }});
         }});
         return ZileanResponse.success(result);
+    }
 
+    /**
+     * 首页监控历史数据
+     *
+     * @return ZileanResponse
+     */
+    @GetMapping("/realTimeMonitorHistory")
+    public ZileanResponse realTimeMonitorHistory() {
+        RealTimeMonitorVO result = new RealTimeMonitorVO();
+        result.setRealTimeMonitorList(new ArrayList<RealTimeMonitor>() {{
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.DELAYED);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime("10:20:30");
+                        setNum(100L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:35");
+                        setNum(200L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:40");
+                        setNum(1000L);
+                    }});
+                }});
+            }});
+
+
+            //
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.READY);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime("10:20:30");
+                        setNum(100L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:35");
+                        setNum(200L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:40");
+                        setNum(1000L);
+                    }});
+                }});
+            }});
+
+
+            //
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.SUCCESS);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime("10:20:30");
+                        setNum(100L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:35");
+                        setNum(200L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:40");
+                        setNum(1000L);
+                    }});
+                }});
+            }});
+
+
+            //
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.FAILED);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime("10:20:30");
+                        setNum(100L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:35");
+                        setNum(200L);
+                    }});
+                    add(new Monitor() {{
+                        setTime("10:20:40");
+                        setNum(1000L);
+                    }});
+                }});
+            }});
+        }});
+        return ZileanResponse.success(result);
+    }
+
+    /**
+     * 首页监控实时数据
+     *
+     * @return ZileanResponse
+     */
+    @GetMapping("/realTimeMonitor")
+    public ZileanResponse realTimeMonitor() {
+        RealTimeMonitorVO result = new RealTimeMonitorVO();
+        String curTime = DelayUtil.getCurHourMinuteSecond();
+        result.setRealTimeMonitorList(new ArrayList<RealTimeMonitor>() {{
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.DELAYED);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime(curTime);
+                        setNum(100L);
+                    }});
+                }});
+            }});
+
+            //
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.READY);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime(curTime);
+                        setNum(200L);
+                    }});
+                }});
+            }});
+
+
+            //
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.SUCCESS);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime(curTime);
+                        setNum(300L);
+                    }});
+                }});
+            }});
+
+            //
+            add(new RealTimeMonitor() {{
+                setType(ZileanEnum.FAILED);
+                setMonitorList(new ArrayList<Monitor>() {{
+                    add(new Monitor() {{
+                        setTime(curTime);
+                        setNum(400L);
+                    }});
+                }});
+            }});
+        }});
+        return ZileanResponse.success(result);
     }
 
     @GetMapping("/job")

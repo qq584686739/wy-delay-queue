@@ -1,3 +1,52 @@
+var curDelayNumMainEcharts;
+var curDelayNumMainOption;
+var curDelayNumMainData = [];
+
+var curReadyNumMainEcharts;
+var curReadyNumMainOption;
+var curReadyNumMainData = [];
+
+var curSuccessNumMainEcharts ;
+var curSuccessNumMainOption ;
+var curSuccessNumMainData = [];
+
+var curFailedNumMainEcharts ;
+var curFailedNumMainOption ;
+var curFailedNumMainData = [];
+
+
+
+/**
+ * 获取监控数据，实时
+ */
+function getRealTimeMonitor() {
+
+}
+
+/**
+ * 数据格式化
+ * 格式化之前：{time: "10:20:30", num: 100}
+ * 格式化之后：{
+            name: '10:20:30',
+            value: [
+                '10:20:30',
+                100
+            ]
+        }
+ * @param data
+ * @returns {{name: string, value: any[]}}
+ */
+function formatData(data) {
+    return {
+        name: data.time,
+        value: [
+            data.time,
+            data.num
+        ]
+    }
+}
+
+
 // 报表统计JS
 function dailyVisits(data) {
     console.info(data);
@@ -44,7 +93,6 @@ function dailyVisits(data) {
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            // data: ['2019/07/01', '2019/07/02', '2019/07/03', '2019/07/04', '2019/07/05', '2019/07/06', '2019/07/07', '2019/07/08']
             data: xAxisData
         },
         yAxis: {
@@ -55,35 +103,30 @@ function dailyVisits(data) {
                 name: '日访问量',
                 type: 'line',
                 stack: '总量',
-                // data: [120, 132, 101, 134, 90, 230, 2170, 100]
                 data: seriesForVisit
             },
             {
                 name: '延迟数',
                 type: 'line',
                 stack: '总量',
-                // data: [220, 182, 191, 234, 290, 330, 310, 200]
                 data: seriesForDelayed
             },
             {
                 name: '读取数',
                 type: 'line',
                 stack: '总量',
-                // data: [150, 232, 201, 154, 190, 330, 2410, 300]
                 data: seriesForReady
             },
             {
                 name: '成功数',
                 type: 'line',
                 stack: '总量',
-                // data: [820, 932, 901, 934, 1290, 1330, 1320, 500]
                 data: seriesForSuccess
             },
             {
                 name: '失败数',
                 type: 'line',
                 stack: '总量',
-                // data: [320, 332, 301, 334, 390, 330, 320, 400]
                 data: seriesForFailed
             }
         ]
@@ -94,30 +137,13 @@ function dailyVisits(data) {
 
 
 <!--今日延迟数JS-->
-function curDelay() {
-    var curDelayNumMainEcharts = echarts.init(document.getElementById('curDelayNumMain'));
-
-    function randomData() {
-        curDelayNumMainNow = new Date(+curDelayNumMainNow + curDelayNumMainS5);
-        curDelayNumMainValue = curDelayNumMainValue + Math.random() * 21 - 10;
-        var time = [curDelayNumMainNow.getHours(), curDelayNumMainNow.getMinutes(), curDelayNumMainNow.getSeconds()].join(':');
-        return {
-            name: time,
-            value: [
-                time,
-                Math.round(curDelayNumMainValue)
-            ]
-        }
+function curDelay(data) {
+    // 初始化历史数据
+    curDelayNumMainEcharts = echarts.init(document.getElementById('curDelayNumMain'));
+    var length = data.length;
+    for (var i = 0; i < length; i++) {
+        curDelayNumMainData.push(formatData(data[i]));
     }
-
-    var curDelayNumMainData = [];
-    var curDelayNumMainNow = new Date();
-    var curDelayNumMainS5 = 1000 * 5;
-    var curDelayNumMainValue = Math.random() * 1000;
-    for (var i = 0; i < 1000; i++) {
-        curDelayNumMainData.push(randomData());
-    }
-
     curDelayNumMainOption = {
         title: {
             text: '今日延迟数',
@@ -158,51 +184,16 @@ function curDelay() {
             data: curDelayNumMainData
         }]
     };
-
     curDelayNumMainEcharts.setOption(curDelayNumMainOption);
-    curDelayNumMainEcharts.setOption({
-        series: [{
-            data: curDelayNumMainData
-        }]
-    });
-
-    setInterval(function () {
-
-        curDelayNumMainData.shift();
-        curDelayNumMainData.push(randomData());
-
-        curDelayNumMainEcharts.setOption(curDelayNumMainOption);
-        curDelayNumMainEcharts.setOption({
-            series: [{
-                data: curDelayNumMainData
-            }]
-        });
-    }, 5000);
 }
 
 <!--今日读取数JS-->
-function curReady() {
-    var curReadyNumMainEcharts = echarts.init(document.getElementById('curReadyNumMain'));
+function curReady(data) {
+    curReadyNumMainEcharts = echarts.init(document.getElementById('curReadyNumMain'));
 
-    function randomData() {
-        curReadyNumMainNow = new Date(+curReadyNumMainNow + curReadyNumMainS5);
-        curReadyNumMainValue = curReadyNumMainValue + Math.random() * 21 - 10;
-        var time = [curReadyNumMainNow.getHours(), curReadyNumMainNow.getMinutes(), curReadyNumMainNow.getSeconds()].join(':');
-        return {
-            name: time,
-            value: [
-                time,
-                Math.round(curReadyNumMainValue)
-            ]
-        }
-    }
-
-    var curReadyNumMainData = [];
-    var curReadyNumMainNow = new Date();
-    var curReadyNumMainS5 = 1000 * 5;
-    var curReadyNumMainValue = Math.random() * 1000;
-    for (var i = 0; i < 1000; i++) {
-        curReadyNumMainData.push(randomData());
+    var length = data.length;
+    for (var i = 0; i < length; i++) {
+        curReadyNumMainData.push(formatData(data[i]));
     }
 
     curReadyNumMainOption = {
@@ -247,51 +238,16 @@ function curReady() {
     };
 
     curReadyNumMainEcharts.setOption(curReadyNumMainOption);
-    curReadyNumMainEcharts.setOption({
-        series: [{
-            data: curReadyNumMainData
-        }]
-    });
-
-    setInterval(function () {
-
-        curReadyNumMainData.shift();
-        curReadyNumMainData.push(randomData());
-
-        curReadyNumMainEcharts.setOption(curReadyNumMainOption);
-        curReadyNumMainEcharts.setOption({
-            series: [{
-                data: curReadyNumMainData
-            }]
-        });
-    }, 5000);
 }
 
 
 <!--今日成功数JS-->
-function curSuccess() {
+function curSuccess(data) {
+     curSuccessNumMainEcharts = echarts.init(document.getElementById('curSuccessNumMain'));
 
-    var curSuccessNumMainEcharts = echarts.init(document.getElementById('curSuccessNumMain'));
-
-    function randomData() {
-        curSuccessNumMainNow = new Date(+curSuccessNumMainNow + curSuccessNumMainS5);
-        curSuccessNumMainValue = curSuccessNumMainValue + Math.random() * 21 - 10;
-        var time = [curSuccessNumMainNow.getHours(), curSuccessNumMainNow.getMinutes(), curSuccessNumMainNow.getSeconds()].join(':');
-        return {
-            name: time,
-            value: [
-                time,
-                Math.round(curSuccessNumMainValue)
-            ]
-        }
-    }
-
-    var curSuccessNumMainData = [];
-    var curSuccessNumMainNow = new Date();
-    var curSuccessNumMainS5 = 1000 * 5;
-    var curSuccessNumMainValue = Math.random() * 1000;
-    for (var i = 0; i < 1000; i++) {
-        curSuccessNumMainData.push(randomData());
+    var length = data.length;
+    for (var i = 0; i < length; i++) {
+        curSuccessNumMainData.push(formatData(data[i]));
     }
 
     curSuccessNumMainOption = {
@@ -336,51 +292,17 @@ function curSuccess() {
     };
 
     curSuccessNumMainEcharts.setOption(curSuccessNumMainOption);
-    curSuccessNumMainEcharts.setOption({
-        series: [{
-            data: curSuccessNumMainData
-        }]
-    });
-
-    setInterval(function () {
-
-        curSuccessNumMainData.shift();
-        curSuccessNumMainData.push(randomData());
-
-        curSuccessNumMainEcharts.setOption(curSuccessNumMainOption);
-        curSuccessNumMainEcharts.setOption({
-            series: [{
-                data: curSuccessNumMainData
-            }]
-        });
-    }, 5000);
 }
 
 
 <!--今日失败数JS-->
-function curFailed() {
+function curFailed(data) {
 
-    var curFailedNumMainEcharts = echarts.init(document.getElementById('curFailedNumMain'));
+     curFailedNumMainEcharts = echarts.init(document.getElementById('curFailedNumMain'));
 
-    function randomData() {
-        curFailedNumMainNow = new Date(+curFailedNumMainNow + curFailedNumMainS5);
-        curFailedNumMainValue = curFailedNumMainValue + Math.random() * 21 - 10;
-        var time = [curFailedNumMainNow.getHours(), curFailedNumMainNow.getMinutes(), curFailedNumMainNow.getSeconds()].join(':');
-        return {
-            name: time,
-            value: [
-                time,
-                Math.round(curFailedNumMainValue)
-            ]
-        }
-    }
-
-    var curFailedNumMainData = [];
-    var curFailedNumMainNow = new Date();
-    var curFailedNumMainS5 = 1000 * 5;
-    var curFailedNumMainValue = Math.random() * 1000;
-    for (var i = 0; i < 1000; i++) {
-        curFailedNumMainData.push(randomData());
+    var length = data.length;
+    for (var i = 0; i < length; i++) {
+        curFailedNumMainData.push(formatData(data[i]));
     }
 
     curFailedNumMainOption = {
@@ -425,24 +347,24 @@ function curFailed() {
     };
 
     curFailedNumMainEcharts.setOption(curFailedNumMainOption);
-    curFailedNumMainEcharts.setOption({
-        series: [{
-            data: curFailedNumMainData
-        }]
-    });
-
-    setInterval(function () {
-
-        curFailedNumMainData.shift();
-        curFailedNumMainData.push(randomData());
-
-        curFailedNumMainEcharts.setOption(curFailedNumMainOption);
-        curFailedNumMainEcharts.setOption({
-            series: [{
-                data: curFailedNumMainData
-            }]
-        });
-    }, 5000);
+    // curFailedNumMainEcharts.setOption({
+    //     series: [{
+    //         data: curFailedNumMainData
+    //     }]
+    // });
+    //
+    // setInterval(function () {
+    //
+    //     curFailedNumMainData.shift();
+    //     curFailedNumMainData.push(randomData());
+    //
+    //     curFailedNumMainEcharts.setOption(curFailedNumMainOption);
+    //     curFailedNumMainEcharts.setOption({
+    //         series: [{
+    //             data: curFailedNumMainData
+    //         }]
+    //     });
+    // }, 5000);
 }
 
 /**
@@ -453,7 +375,6 @@ function ajaxRequestAdminIndex() {
         if (0 !== result.code) {
             return;
         }
-        console.info(result);
 
         var visitNumberForTodayDoc = $("#visitNumberForToday");
         var visitNumberForTodayVal = result.data.curVisitNumber;
@@ -518,16 +439,85 @@ function ajaxRequestAdminIndex() {
         // 渲染统计报表
         dailyVisits(result.data.historyData);
 
-        // 渲染今日延迟数
-        curDelay();
-
-        // 渲染今日读取数
-        curReady();
-
-        // 渲染今日成功数
-        curSuccess();
-
-        // 渲染今日失败数
-        curFailed();
+        $.get("/admin/realTimeMonitorHistory", function (result) {
+            console.info(result);
+            if (0 !== result.code) {
+                return;
+            }
+            var dataList = result.data.realTimeMonitorList;
+            var length = dataList.length;
+            if (length < 1) {
+                // todo 没有数据
+                return;
+            }
+            for (var i = 0; i < length; i++) {
+                var dataElement = dataList[i];
+                if ("DELAYED" === dataElement.type) {
+                    // 渲染今日延迟数
+                    curDelay(dataElement.monitorList);
+                } else if ("READY" === dataElement.type) {
+                    // 渲染今日读取数
+                    curReady(dataElement.monitorList);
+                } else if ("SUCCESS" === dataElement.type) {
+                    // 渲染今日成功数
+                    curSuccess(dataElement.monitorList);
+                } else if ("FAILED" === dataElement.type) {
+                    // 渲染今日失败数
+                    curFailed(dataElement.monitorList);
+                }
+            }
+        });
     });
 }
+
+
+setInterval(function () {
+    $.get("/admin/realTimeMonitor", function (result) {
+        if (0 !== result.code) {
+            return;
+        }
+        var dataList = result.data.realTimeMonitorList;
+        var length = dataList.length;
+        if (length < 1) {
+            // todo 没有数据
+            return;
+        }
+        for (var i = 0; i < length; i++) {
+            var dataElement = dataList[i];
+            if ("DELAYED" === dataElement.type) {
+                curDelayNumMainData.shift();
+                curDelayNumMainData.push(formatData(dataElement.monitorList[0]));
+                curDelayNumMainEcharts.setOption({
+                    series: [{
+                        data: curDelayNumMainData
+                    }]
+                });
+            } else if ("READY" === dataElement.type) {
+                curReadyNumMainData.shift();
+                curReadyNumMainData.push(formatData(dataElement.monitorList[0]));
+                curReadyNumMainEcharts.setOption({
+                    series: [{
+                        data: curReadyNumMainData
+                    }]
+                });
+            } else if ("SUCCESS" === dataElement.type) {
+                curSuccessNumMainData.shift();
+                curSuccessNumMainData.push(formatData(dataElement.monitorList[0]));
+                curSuccessNumMainEcharts.setOption({
+                    series: [{
+                        data: curSuccessNumMainData
+                    }]
+                });
+            } else if ("FAILED" === dataElement.type) {
+                curFailedNumMainData.shift();
+                curFailedNumMainData.push(formatData(dataElement.monitorList[0]));
+                curFailedNumMainEcharts.setOption({
+                    series: [{
+                        data: curFailedNumMainData
+                    }]
+                });
+            }
+        }
+    });
+}, 5000);
+

@@ -3,6 +3,7 @@ package com.zilean.queue.domain.vo;
 import com.zilean.queue.domain.response.ResponseAble;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +13,8 @@ import java.util.List;
  * created on 2019-07-11 00:00
  */
 @Data
-public class AdminIndexVO implements ResponseAble {
+public class AdminIndexVO implements Serializable,ResponseAble {
+    private static final long serialVersionUID = -7748246758347480791L;
     /**
      * 今日访问量
      */

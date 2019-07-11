@@ -31,4 +31,17 @@ public class DelayUtil {
             calendar.get(Calendar.SECOND);
         return Double.parseDouble(result);
     }
+
+    /**
+     * 获取当前时分秒
+     * 格式：HH:mm:ss
+     *
+     * @return String
+     */
+    public static String getCurHourMinuteSecond() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.HOUR_OF_DAY) + ":" +
+            calendar.get(Calendar.MINUTE) + ":" +
+            calendar.get(Calendar.SECOND);
+    }
 }
