@@ -5,11 +5,13 @@ import com.zilean.queue.domain.response.ZileanResponse;
 import com.zilean.queue.domain.vo.AdminDelayedJobListVO;
 import com.zilean.queue.domain.vo.AdminIndexVO;
 import com.zilean.queue.domain.vo.RealTimeMonitorVO;
-import com.zilean.queue.enums.ZileanEnum;
+import com.zilean.queue.enums.DelayEnum;
 import com.zilean.queue.redis.RedissonUtil;
-import com.zilean.queue.util.DelayUtil;
+import com.zilean.queue.service.base.ZileanService;
+import com.zilean.queue.util.ZileanTimeUtil;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +37,10 @@ import static com.zilean.queue.constant.RedisConstant.VISIT_TOTAL_KEY;
 @RestController
 @RequestMapping("/admin")
 public class ZileanAdminController {
+
+
+    @Autowired
+    private ZileanService zileanStatisticsServiceImpl;
     // TODO: 2019-07-03 管理端接口,增删改查
 
     /**
@@ -44,50 +50,28 @@ public class ZileanAdminController {
      */
     @GetMapping("/index")
     public ZileanResponse index() {
-        // TODO: 2019-07-11 访问该接口新增访问量
-
 
         AdminIndexVO result = new AdminIndexVO();
         RedissonClient redissonClient = RedissonUtil.getRedissonClient();
 
         // 设置今日访问量、访问总量
-        // TODO: 2019-07-11 init 的时候需要判断访问量的值，如果不存在需要给访问量设置值
         result.setCurVisitNumber(redissonClient.getAtomicLong(VISIT_KEY).get());
         result.setVisitNumberTotal(redissonClient.getAtomicLong(VISIT_TOTAL_KEY).get());
 
         // 设置今日延迟数、延迟总数
-        // TODO: 2019-07-11 任务进入延迟队列需要记录当日延迟数，且记录到总数
         result.setCurDelayed(redissonClient.getAtomicLong(TODAY_DELAYED_KEY).get());
         result.setCurDelayedTotal(redissonClient.getAtomicLong(TODAY_DELAYED_TOTAL_KEY).get());
 
         // 设置今日读取数、读取总数
-        // TODO: 2019-07-11 这种情况可能会重复，从失败队列绕了一圈回来，进入读取队列
-        // TODO: 2019-07-11 将任务放到读取队列的时候，需要记录到读取数，以及读取总数
         result.setCurReady(redissonClient.getAtomicLong(TODAY_READY_KEY).get());
         result.setCurReadyTotal(redissonClient.getAtomicLong(TODAY_READY_TOTAL_KEY).get());
 
-
         // 设置今日失败数、失败总数
         // TODO: 2019-07-11 失败队列是否需要考虑三级失败队列？
-        // TODO: 2019-07-11 可能会有重复进入
-        // TODO: 2019-07-11 进入失败队列记录失败数、失败总数
         result.setCurFailed(redissonClient.getAtomicLong(TODAY_FAILED_KEY).get());
         result.setCurFailedTotal(redissonClient.getAtomicLong(TODAY_FAILED_TOTAL_KEY).get());
 
 
-        // 设置历史数据
-        // TODO: 2019-07-11 查询数据库
-        // TODO: 2019-07-11 定时任务将每日数据记录到数据库
-
-
-//        result.setCurVisitNumber(112233L);
-//        result.setVisitNumberTotal(112233L);
-        result.setCurDelayed(112233L);
-        result.setCurDelayedTotal(112233L);
-        result.setCurReady(112233L);
-        result.setCurReadyTotal(112233L);
-        result.setCurFailed(112233L);
-        result.setCurFailedTotal(112233L);
         result.setHistoryData(new ArrayList<AdminIndexVO.DailyReport>() {{
             add(new AdminIndexVO.DailyReport() {{
                 setVisit(100L);
@@ -126,7 +110,7 @@ public class ZileanAdminController {
 
         List<RealTimeMonitorVO> result = new ArrayList<>();
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.DELAYED);
+            setType(DelayEnum.DELAYED);
             setMonitorList(new ArrayList<Monitor>() {{
                 for (int i = 0; i < 100; i++) {
                     int finalI = i;
@@ -148,7 +132,7 @@ public class ZileanAdminController {
         }});
 
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.READY);
+            setType(DelayEnum.READY);
             setMonitorList(new ArrayList<Monitor>() {{
                 for (int i = 0; i < 100; i++) {
 
@@ -170,7 +154,7 @@ public class ZileanAdminController {
         }});
 
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.SUCCESS);
+            setType(DelayEnum.SUCCESS);
             setMonitorList(new ArrayList<Monitor>() {{
 
                 add(new Monitor() {{
@@ -189,7 +173,7 @@ public class ZileanAdminController {
         }});
 
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.FAILED);
+            setType(DelayEnum.FAILED);
             setMonitorList(new ArrayList<Monitor>() {{
 
                 add(new Monitor() {{
@@ -217,10 +201,10 @@ public class ZileanAdminController {
      */
     @GetMapping("/realTimeMonitor")
     public ZileanResponse realTimeMonitor() {
-        String curTime = DelayUtil.getCurHourMinuteSecond();
+        String curTime = ZileanTimeUtil.getCurHourMinuteSecond();
         List<RealTimeMonitorVO> result = new ArrayList<>();
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.DELAYED);
+            setType(DelayEnum.DELAYED);
             setMonitorList(new ArrayList<Monitor>() {{
                 add(new Monitor() {{
                     setTime(curTime);
@@ -229,7 +213,7 @@ public class ZileanAdminController {
             }});
         }});
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.READY);
+            setType(DelayEnum.READY);
             setMonitorList(new ArrayList<Monitor>() {{
                 add(new Monitor() {{
                     setTime(curTime);
@@ -239,7 +223,7 @@ public class ZileanAdminController {
         }});
 
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.SUCCESS);
+            setType(DelayEnum.SUCCESS);
             setMonitorList(new ArrayList<Monitor>() {{
                 add(new Monitor() {{
                     setTime(curTime);
@@ -249,7 +233,7 @@ public class ZileanAdminController {
         }});
 
         result.add(new RealTimeMonitorVO() {{
-            setType(ZileanEnum.FAILED);
+            setType(DelayEnum.FAILED);
             setMonitorList(new ArrayList<Monitor>() {{
                 add(new Monitor() {{
                     setTime(curTime);

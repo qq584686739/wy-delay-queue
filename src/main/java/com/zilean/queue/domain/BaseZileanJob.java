@@ -1,5 +1,6 @@
 package com.zilean.queue.domain;
 
+import com.zilean.queue.constant.ZileanConstant;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,9 +16,9 @@ public abstract class BaseZileanJob implements Serializable {
 
     private static final long serialVersionUID = 6266181599908960090L;
     /**
-     * jobId
+     * 任务id
      */
-    protected String id;
+    protected String delayedId;
 
     /**
      * 延迟时间
@@ -28,6 +29,11 @@ public abstract class BaseZileanJob implements Serializable {
      * token
      */
     protected String token;
+
+    /**
+     * 任务名称，如果不传，则赋予默认值
+     */
+    protected String name = ZileanConstant.DEFAULT_DELAY_NAME;
 
     /**
      * 校验参数

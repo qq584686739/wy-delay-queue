@@ -18,6 +18,9 @@ public class ZileanConstant {
 
     public static final String[] INVALID_SIGIN = new String[]{"@", "#", "$", "%", "^", "&", "*"};
 
+    /**
+     * 对job的几种常见操作
+     */
     public static final int OPT_INSERT = 0;
     public static final int OPT_APPEND = 1;
     public static final int OPT_UPDATE = 2;
@@ -32,5 +35,16 @@ public class ZileanConstant {
      * 客户端的请求需要对token进行校验，校验token的路径拦截器需要的path
      */
     public static final String CLIENT_PATH_PATTERN = "/client/**";
+
+    /**
+     * 默认的任务名称
+     */
+    public static final String DEFAULT_DELAY_NAME = "unnamed";
+
+
+    /**
+     * 默认的任务执行时间
+     */
+    public static final int DEFAULT_DELAY_TTR = 5000;
 
 }

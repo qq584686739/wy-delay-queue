@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    url: jdbc:mysql://i.27wy.cn:3306/db_zilean?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      username: root
+      password: sdl8mysqlPASSWD
+

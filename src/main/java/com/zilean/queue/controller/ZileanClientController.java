@@ -1,9 +1,11 @@
 package com.zilean.queue.controller;
 
 import com.zilean.queue.domain.SimpleDelayJob;
+import com.zilean.queue.domain.entity.ZileanJobDO;
 import com.zilean.queue.domain.response.ZileanResponse;
-import com.zilean.queue.service.ZileanClientServiceImpl;
+import com.zilean.queue.service.impl.ZileanJobServiceImpl;
 import com.zilean.queue.util.ThreadPoolExecutorUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +17,6 @@ import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
 import static com.zilean.queue.constant.ZileanConstant.OPT_DELETE;
 import static com.zilean.queue.constant.ZileanConstant.OPT_INSERT;
 import static com.zilean.queue.constant.ZileanConstant.OPT_UPDATE;
-import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_PUBLISH_JOB_ERROR;
-import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_FOR_NOT_FOUNT_JOB;
 
 /**
  * 描述:
@@ -27,6 +27,8 @@ import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_FOR_NOT_FOUNT
 @RestController
 @RequestMapping("/client")
 public class ZileanClientController {
+
+    // TODO: 2019-07-14 这俩线程池给干掉
     /**
      * add exec
      */
@@ -37,20 +39,15 @@ public class ZileanClientController {
      */
     private final ExecutorService addResultExec = ThreadPoolExecutorUtil.newCachedThreadPool();
 
+    // TODO: 2019-07-14 面对接口开发
     @Autowired
-    private ZileanClientServiceImpl zileanClientServiceImpl;
+    private ZileanJobServiceImpl zileanJobServiceImpl;
 
     // TODO: 2019-07-04 add logback.xml
 
     // TODO: 2019-07-03 readme文件
     // TODO: 2019-07-03 准备local dev test prod 环境
-    // TODO: 2019-07-03 admin 页面：Thymeleaf
     // TODO: 2019-07-03 完善pom文件其他信息
-
-
-    // TODO: 2019-07-02 设计数据库
-    // TODO: 2019-07-03 mybatis generator ？jpa？
-    // TODO: 2019-07-03 druid 配置
 
 
     // TODO: 2019-07-02 做防重复提交
@@ -65,36 +62,52 @@ public class ZileanClientController {
     @GetMapping("/publish")
     public ZileanResponse publish(SimpleDelayJob simpleDelayJob) {
         simpleDelayJob.check(OPT_INSERT);
-        if (1 != zileanClientServiceImpl.insert(simpleDelayJob)) {
-            return ZileanResponse.error(ERROR_ADD_JOB_FOR_PUBLISH_JOB_ERROR);
-        }
+        ZileanJobDO zileanJobDO = new ZileanJobDO();
+        BeanUtils.copyProperties(simpleDelayJob, zileanJobDO);
+        token(zileanJobDO);
+        zileanJobServiceImpl.insert(zileanJobDO);
         return ZileanResponse.success();
     }
+
 
     @GetMapping("/append")
     public ZileanResponse append(SimpleDelayJob simpleDelayJob) {
         simpleDelayJob.check(OPT_APPEND);
-        if (1 != zileanClientServiceImpl.appendById(simpleDelayJob)) {
-            return ZileanResponse.error(ERROR_FOR_NOT_FOUNT_JOB);
-        }
+        ZileanJobDO zileanJobDO = new ZileanJobDO();
+        BeanUtils.copyProperties(simpleDelayJob, zileanJobDO);
+        token(zileanJobDO);
+        zileanJobServiceImpl.appendById(zileanJobDO);
         return ZileanResponse.success();
     }
 
     @GetMapping("/update")
     public ZileanResponse update(SimpleDelayJob simpleDelayJob) {
         simpleDelayJob.check(OPT_UPDATE);
-        if (1 != zileanClientServiceImpl.updateById(simpleDelayJob)) {
-            return ZileanResponse.error(ERROR_FOR_NOT_FOUNT_JOB);
-        }
+        ZileanJobDO zileanJobDO = new ZileanJobDO();
+        BeanUtils.copyProperties(simpleDelayJob, zileanJobDO);
+        token(zileanJobDO);
+        zileanJobServiceImpl.updateById(zileanJobDO);
         return ZileanResponse.success();
     }
 
     @GetMapping("/delete")
     public ZileanResponse delete(SimpleDelayJob simpleDelayJob) {
         simpleDelayJob.check(OPT_DELETE);
-        if (1 != zileanClientServiceImpl.deleteById(simpleDelayJob.getId())) {
-            return ZileanResponse.error(ERROR_FOR_NOT_FOUNT_JOB);
-        }
+        // TODO: 2019-07-14 check token
+        zileanJobServiceImpl.deleteById(simpleDelayJob.getDelayedId());
         return ZileanResponse.success();
+    }
+
+    @GetMapping("/cancel")
+    public ZileanResponse cancel(SimpleDelayJob simpleDelayJob) {
+        simpleDelayJob.check(OPT_DELETE);
+        // TODO: 2019-07-14 check token
+        zileanJobServiceImpl.cancel(simpleDelayJob.getDelayedId());
+        return ZileanResponse.success();
+    }
+
+    private void token(ZileanJobDO zileanJobDO) {
+        // TODO: 2019-07-14 token问题
+        zileanJobDO.setTokenId(123L);
     }
 }

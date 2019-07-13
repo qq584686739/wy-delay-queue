@@ -1,5 +1,6 @@
 package com.zilean.queue.domain;
 
+import com.zilean.queue.constant.ZileanConstant;
 import com.zilean.queue.exception.ZileanException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -51,7 +52,7 @@ public class SimpleDelayJob extends BaseZileanJob {
     /**
      * 回调超时时间，由业务方指控，当然，我们也有默认值
      */
-    private long ttr;
+    private Integer ttr = ZileanConstant.DEFAULT_DELAY_TTR;
 
     @Override
     public void check(int opt) {
@@ -59,7 +60,7 @@ public class SimpleDelayJob extends BaseZileanJob {
         // TODO: 2019-07-05 check ttr
         switch (opt) {
             case OPT_INSERT:
-                checkDelay();
+                checkDelay(false);
                 checkBody(false);
                 checkCallBack(false);
                 checkHeader(true);
@@ -71,7 +72,7 @@ public class SimpleDelayJob extends BaseZileanJob {
                 break;
 
             case OPT_UPDATE:
-                checkDelay();
+                checkDelay(true);
                 checkBody(true);
                 checkCallBack(true);
                 checkHeader(true);
@@ -117,17 +118,23 @@ public class SimpleDelayJob extends BaseZileanJob {
         }
     }
 
-    private void checkDelay() {
-        if (this.delay < 0 || this.delay > MAX_DELAY_15_DAYS) {
-            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
+    private void checkDelay(boolean canEmpty) {
+        if (canEmpty) {
+            if (this.delay < 0 || this.delay > MAX_DELAY_15_DAYS) {
+                throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
+            }
+        } else {
+            if (this.delay <= 0 || this.delay > MAX_DELAY_15_DAYS) {
+                throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
+            }
         }
     }
 
     private void checkId() {
-        if (null == id || StringUtils.isEmpty(id.trim())) {
+        if (null == delayedId || StringUtils.isEmpty(delayedId.trim())) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID);
         }
-        if (MAX_ID_LENGTH < id.length()) {
+        if (MAX_ID_LENGTH < delayedId.length()) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID_BEYOND_LENGTH);
         }
     }

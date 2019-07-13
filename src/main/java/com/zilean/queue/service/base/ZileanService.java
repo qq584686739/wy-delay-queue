@@ -1,8 +1,10 @@
-package com.zilean.queue.service;
+package com.zilean.queue.service.base;
 
-import com.zilean.queue.domain.BaseZileanJob;
+import com.zilean.queue.domain.entity.base.BaseDO;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 描述:
@@ -10,7 +12,7 @@ import java.util.List;
  * @author xjh
  * created on 2019-07-02 20:52
  */
-public interface ZileanService {
+public interface ZileanService<DO extends BaseDO> {
     /**
      * 添加任务
      * 返回影响job的个数
@@ -18,16 +20,16 @@ public interface ZileanService {
      * @param job job
      * @return int
      */
-    int insert(BaseZileanJob job);
+    DO insert(DO job);
 
     /**
      * 删除任务
      * 返回影响job的个数
      *
-     * @param id id
+     * @param id delayedId
      * @return int
      */
-    int deleteById(String id);
+    void deleteById(Serializable id);
 
     /**
      * 批量删除任务
@@ -36,7 +38,7 @@ public interface ZileanService {
      * @param idList idList
      * @return int
      */
-    int deleteByIdList(List<String> idList);
+    void deleteByIdList(List<Serializable> idList);
 
     /**
      * 更新任务
@@ -45,7 +47,7 @@ public interface ZileanService {
      * @param job job
      * @return int
      */
-    int updateById(BaseZileanJob job);
+    DO updateById(DO job);
 
     /**
      * 追加任务
@@ -54,15 +56,15 @@ public interface ZileanService {
      * @param job job
      * @return int
      */
-    int appendById(BaseZileanJob job);
+    DO appendById(DO job);
 
     /**
      * 查找任务
      *
-     * @param id id
-     * @return ZileanDelayJob
+     * @param id delayedId
+     * @return DO
      */
-    BaseZileanJob selectById(String id);
+    Optional<DO> selectById(Serializable id);
 
 
 }

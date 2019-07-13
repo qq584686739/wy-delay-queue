@@ -1,6 +1,6 @@
 package com.zilean.queue.domain.vo;
 
-import com.zilean.queue.enums.ZileanEnum;
+import com.zilean.queue.enums.DelayEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,7 +16,7 @@ import java.util.List;
 public class RealTimeMonitorVO implements Serializable {
     private static final long serialVersionUID = -4831972263872629610L;
 
-    private ZileanEnum type;
+    private DelayEnum type;
     private List<Monitor> monitorList;
 
     @Data

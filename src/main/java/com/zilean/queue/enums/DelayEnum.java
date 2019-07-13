@@ -1,12 +1,14 @@
 package com.zilean.queue.enums;
 
+import java.io.Serializable;
+
 /**
  * 描述:
  *
  * @author xjh
  * created on 2019-07-11 13:04
  */
-public enum ZileanEnum {
+public enum DelayEnum implements Serializable {
     /**
      * 延迟
      */

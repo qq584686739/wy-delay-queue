@@ -49,7 +49,6 @@ public class ZileanLogAspect {
         redissonClient.getAtomicLong(VISIT_KEY).incrementAndGet();
         redissonClient.getAtomicLong(VISIT_TOTAL_KEY).incrementAndGet();
 
-
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (null == attributes) {
@@ -57,6 +56,7 @@ public class ZileanLogAspect {
         }
         HttpServletRequest request = attributes.getRequest();
 
+        // 实时请求接口不记录日志
         if ("realTimeMonitor".equals(joinPoint.getSignature().getName())) {
             return;
         }
