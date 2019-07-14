@@ -7,7 +7,7 @@ package com.zilean.queue.enums;
  * created on 2019-07-14 03:33
  */
 public enum TypeEnum {
-    JOB_TYPE_NORMAL(1);
+    JOB_TYPE_SIMPLE(1);
 
     private int type;
 

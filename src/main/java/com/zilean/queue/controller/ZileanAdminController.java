@@ -72,6 +72,7 @@ public class ZileanAdminController {
         result.setCurFailedTotal(redissonClient.getAtomicLong(TODAY_FAILED_TOTAL_KEY).get());
 
 
+        // TODO: 2019-07-14 查询报表数据库
         result.setHistoryData(new ArrayList<AdminIndexVO.DailyReport>() {{
             add(new AdminIndexVO.DailyReport() {{
                 setVisit(100L);

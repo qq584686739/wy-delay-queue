@@ -27,6 +27,8 @@ public enum ZileanExceptionEnum {
 
     // update job error
     ERROR_UPDATE_JOB(10030001, "update job error!"),
+    ERROR_UPDATE_JOB_FOR_EXPIRE(10030002, "update job error, job expire!"),
+    ERROR_UPDATE_JOB_FOR_SOON_EXPIRE(10030003, "update job error, there's not much time left!"),
 
 
     // 添加队列失败!

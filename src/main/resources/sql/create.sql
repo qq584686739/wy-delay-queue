@@ -12,7 +12,7 @@ CREATE TABLE db_zilean.tbl_zilean_queue
     call_back   VARCHAR(200)            NOT NULL COMMENT '回调地址，http://,https://',
     header      VARCHAR(200)  DEFAULT '' COMMENT '回调请求头，json格式',
     body        VARCHAR(2000) DEFAULT '' COMMENT '回调请求体，任意格式',
-    status      INT(4)        DEFAULT 1 NOT NULL COMMENT '延迟状态：1delayed、2ready、3failed、4finish、5delete',
+    status      INT(4)        DEFAULT 1 NOT NULL COMMENT '延迟状态：1delayed、2ready、3failed、4finish、5delete、6cancel',
     create_time BIGINT(20)              NOT NULL COMMENT '创建时间:yyyyMMddHHmmss',
     update_time BIGINT(20)              NOT NULL COMMENT '更新时间:yyyyMMddHHmmss',
     ver         INT(11)       DEFAULT 1 NOT NULL COMMENT '版本号',
@@ -51,6 +51,7 @@ CREATE TABLE db_zilean.tbl_zilean_statistics
 (
     id            BIGINT(20) AUTO_INCREMENT PRIMARY KEY COMMENT '自增主键id',
     create_time   BIGINT(20)        NOT NULL COMMENT '创建时间:yyyyMMddHHmmss',
+    update_time   BIGINT(20)        NOT NULL COMMENT '更新时间:yyyyMMddHHmmss',
 
     visit_num     INT(11) DEFAULT 0 NOT NULL COMMENT '当日访问量',
     visit_total   INT(11) DEFAULT 0 NOT NULL COMMENT '访问总量',
@@ -74,3 +75,4 @@ CREATE TABLE db_zilean.tbl_zilean_statistics
   CHARSET = utf8 COMMENT '统计表';
 CREATE INDEX idx_create_time ON db_zilean.tbl_zilean_statistics (create_time);
 
+INSERT INTO db_zilean.tbl_zilean_statistics (id, create_time, visit_num, visit_total, delayed_num, delayed_total, ready_num, ready_total, success_num, success_total, failed_num, failed_total, ver, status) VALUES (3, 20190714000000, 99, 99, 0, 4, 0, 0, 0, 0, 0, 0, 1, 1);

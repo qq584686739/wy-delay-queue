@@ -2,6 +2,7 @@ package com.zilean.queue.domain.entity;
 
 import com.zilean.queue.domain.entity.base.BaseDO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 /**
  * 描述:
@@ -17,10 +17,11 @@ import java.io.Serializable;
  * @author xjh
  * created on 2019-07-04 17:33
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "tbl_zilean_queue")
-public class ZileanJobDO implements BaseDO, Serializable {
+public class ZileanJobDO extends BaseDO {
 
     private static final long serialVersionUID = -4605211241815058608L;
     /**
@@ -65,30 +66,6 @@ public class ZileanJobDO implements BaseDO, Serializable {
      */
     @Column(name = "body", nullable = false)
     private String body;
-
-    /**
-     * 延迟状态：1delayed、2ready、3failed、4finish、5delete
-     */
-    @Column(name = "status", nullable = false)
-    private Integer status;
-
-    /**
-     * 创建时间:yyyyMMddHHmmss
-     */
-    @Column(name = "create_time", nullable = false)
-    private Long createTime;
-
-    /**
-     * 更新时间:yyyyMMddHHmmss
-     */
-    @Column(name = "update_time", nullable = false)
-    private Long updateTime;
-
-    /**
-     * 版本号
-     */
-    @Column(name = "ver", nullable = false)
-    private Integer ver;
 
     /**
      * token_id

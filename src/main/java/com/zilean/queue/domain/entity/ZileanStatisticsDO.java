@@ -2,6 +2,7 @@ package com.zilean.queue.domain.entity;
 
 import com.zilean.queue.domain.entity.base.BaseDO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 /**
  * 描述:
@@ -17,10 +17,11 @@ import java.io.Serializable;
  * @author xjh
  * created on 2019-07-13 19:31
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "tbl_zilean_statistics")
-public class ZileanStatisticsDO implements BaseDO, Serializable {
+public class ZileanStatisticsDO extends BaseDO {
 
     private static final long serialVersionUID = 8343060305240563687L;
     /**
@@ -29,24 +30,6 @@ public class ZileanStatisticsDO implements BaseDO, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    /**
-     * 创建时间:yyyyMMdd000000
-     */
-    @Column(name = "create_time", nullable = false)
-    private Long createTime;
-
-    /**
-     * 版本号
-     */
-    @Column(name = "ver", nullable = false)
-    private Integer ver;
-
-    /**
-     * 1正常
-     */
-    @Column(name = "status", nullable = false)
-    private Integer status;
 
     /**
      * 当日访问量

@@ -1,6 +1,9 @@
 package com.zilean.queue.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 描述:
@@ -10,8 +13,9 @@ import java.util.Calendar;
  */
 public class ZileanTimeUtil {
 
-    public final static String ZERO_HOUR_MINUTE_SECOND = "000000";
-    public final static String TIME_SEPARATOR = ":";
+    private static final String yyyyMMddHHmmss = "yyyyMMddHHmmss";
+    private static final String ZERO_HOUR_MINUTE_SECOND = "000000";
+    private static final String TIME_SEPARATOR = ":";
 
     private ZileanTimeUtil() {
     }
@@ -75,5 +79,18 @@ public class ZileanTimeUtil {
             dataStr = "0" + data;
         }
         return dataStr;
+    }
+
+    /**
+     * 获取时间差，单位，秒
+     *
+     * @param startTime startTime，格式yyyyMMddHHmmss
+     * @return long
+     */
+    public static long getTimeDifference(long startTime) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(yyyyMMddHHmmss);
+        Date startDate = sdf.parse(String.valueOf(startTime));
+        Date curDate = new Date();
+        return (curDate.getTime() - startDate.getTime()) / 1000;
     }
 }

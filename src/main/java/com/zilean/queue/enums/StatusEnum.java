@@ -9,12 +9,13 @@ package com.zilean.queue.enums;
 public enum StatusEnum {
 
     // ==========job status start
-    // 延迟状态：1delayed、2ready、3failed、4finish、5delete
+    // 延迟状态：1delayed、2ready、3failed、4finish、5delete、6cancel
     JOB_STATUS_DELAYED(1),
     JOB_STATUS_READY(2),
     JOB_STATUS_FAILED(3),
     JOB_STATUS_FINISH(4),
     JOB_STATUS_DELETE(5),
+    JOB_STATUS_CANCEL(6),
 
     // ==========job status end
 

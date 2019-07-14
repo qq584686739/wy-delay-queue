@@ -15,11 +15,8 @@ public interface ZileanJobService extends ZileanService<ZileanJobDO> {
 
     /**
      * 取消延迟任务
-     * true  取消成功
-     * false 取消失败
      *
      * @param delayedId delayedId
-     * @return boolean
      */
-    boolean cancel(Serializable delayedId);
+    void cancel(Serializable delayedId);
 }

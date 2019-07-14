@@ -2,6 +2,7 @@ package com.zilean.queue.service.base;
 
 import com.zilean.queue.domain.entity.base.BaseDO;
 import com.zilean.queue.redis.RedissonUtil;
+import com.zilean.queue.util.ZileanUtil;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RedissonClient;
@@ -35,6 +36,7 @@ public abstract class AbstractZileanService<T extends JpaRepository, DO extends 
 
     @Override
     public DO insert(DO d) {
+        ZileanUtil.defaultInsertValueForBaseDO(d);
         return (DO) jpaRepository().save(d);
     }
 
@@ -50,6 +52,7 @@ public abstract class AbstractZileanService<T extends JpaRepository, DO extends 
 
     @Override
     public DO updateById(DO d) {
+        ZileanUtil.defaultUpdatetValueForBaseDO(d);
         return (DO) jpaRepository().save(d);
     }
 

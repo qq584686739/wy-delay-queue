@@ -47,4 +47,20 @@ public class ZileanConstant {
      */
     public static final int DEFAULT_DELAY_TTR = 5000;
 
+
+    /**
+     * 默认的ver
+     */
+    public static final int DEFAULT_VER = 1;
+    /**
+     * 默认的重试次数
+     */
+    public static final int DEFAULT_RETRY_TIME = 0;
+
+
+    /**
+     * 当延迟任务低于这个时间，则不再允许修改延迟时间
+     */
+    public static final int DEFAULT_MIN_ALLOW_UPDATE_DELAY_RANGE = 60 * 5;
+
 }
