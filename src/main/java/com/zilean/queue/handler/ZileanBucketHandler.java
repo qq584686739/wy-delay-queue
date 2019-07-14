@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 
-import static com.zilean.queue.constant.ZileanConstant.BUCKET_NAME;
+import static com.zilean.queue.constant.RedisConstant.BUCKET_NAME;
+
 
 /**
  * 描述:

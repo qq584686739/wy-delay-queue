@@ -1,9 +1,11 @@
 package com.zilean.queue.aop;
 
+import com.zilean.queue.redis.RedissonUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+
+import static com.zilean.queue.constant.RedisConstant.VISIT_KEY;
+import static com.zilean.queue.constant.RedisConstant.VISIT_TOTAL_KEY;
 
 /**
  * 描述:
@@ -38,6 +43,12 @@ public class ZileanLogAspect {
      */
     @Before("logPointCut()")
     public void doBefore(JoinPoint joinPoint) {
+
+        // 设置今日访问量、访问总量
+        RedissonClient redissonClient = RedissonUtil.getRedissonClient();
+        redissonClient.getAtomicLong(VISIT_KEY).incrementAndGet();
+        redissonClient.getAtomicLong(VISIT_TOTAL_KEY).incrementAndGet();
+
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (null == attributes) {
@@ -45,11 +56,16 @@ public class ZileanLogAspect {
         }
         HttpServletRequest request = attributes.getRequest();
 
+        // 实时请求接口不记录日志
+        if ("realTimeMonitor".equals(joinPoint.getSignature().getName())) {
+            return;
+        }
+
         log.info("invoke before==========[{}][{}][{}][{}][{}]",
             Thread.currentThread().getName(),
             request.getRequestURL(),
             request.getMethod(),
-            joinPoint.getSignature().getDeclaringTypeName(),
+            joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName(),
             Arrays.toString(joinPoint.getArgs()));
     }
 }

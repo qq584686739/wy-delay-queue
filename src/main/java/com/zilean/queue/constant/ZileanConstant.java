@@ -11,16 +11,6 @@ import java.util.List;
  */
 public class ZileanConstant {
 
-    /**
-     * project name
-     */
-    public static final String PROJECT_NAME = "ZILEAN-QUEUE:";
-
-    /**
-     * bucket name
-     */
-    public static final String BUCKET_NAME = PROJECT_NAME + "ZILEAN-BUCKET";
-
     public static final int MAX_DELAY_15_DAYS = 1296000;
     public static final int MAX_BODY_LENGTH = 2000;
     public static final int MAX_ID_LENGTH = 20;
@@ -28,6 +18,9 @@ public class ZileanConstant {
 
     public static final String[] INVALID_SIGIN = new String[]{"@", "#", "$", "%", "^", "&", "*"};
 
+    /**
+     * 对job的几种常见操作
+     */
     public static final int OPT_INSERT = 0;
     public static final int OPT_APPEND = 1;
     public static final int OPT_UPDATE = 2;
@@ -42,5 +35,32 @@ public class ZileanConstant {
      * 客户端的请求需要对token进行校验，校验token的路径拦截器需要的path
      */
     public static final String CLIENT_PATH_PATTERN = "/client/**";
+
+    /**
+     * 默认的任务名称
+     */
+    public static final String DEFAULT_DELAY_NAME = "unnamed";
+
+
+    /**
+     * 默认的任务执行时间
+     */
+    public static final int DEFAULT_DELAY_TTR = 5000;
+
+
+    /**
+     * 默认的ver
+     */
+    public static final int DEFAULT_VER = 1;
+    /**
+     * 默认的重试次数
+     */
+    public static final int DEFAULT_RETRY_TIME = 0;
+
+
+    /**
+     * 当延迟任务低于这个时间，则不再允许修改延迟时间
+     */
+    public static final int DEFAULT_MIN_ALLOW_UPDATE_DELAY_RANGE = 60 * 5;
 
 }

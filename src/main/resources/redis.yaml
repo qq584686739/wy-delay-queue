@@ -13,7 +13,9 @@ singleServerConfig:
 #  pingConnection: false
   keepAlive: false
   tcpNoDelay: false
-  address: "redis://127.0.0.1:6379"
+#  address: "redis://i.27wy.cn:6379"
+  address: "redis://47.104.191.139:6379"
+#  address: "redis://127.0.0.1:6379"
   subscriptionConnectionMinimumIdleSize: 1
   subscriptionConnectionPoolSize: 50
   connectionMinimumIdleSize: 10
@@ -21,6 +23,7 @@ singleServerConfig:
   database: 0
 #  dnsMonitoring: true
   dnsMonitoringInterval: 5000
+  password: "sdl8redis"
 threads: 16
 nettyThreads: 32
 referenceEnabled: true

@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TopicDelayJob extends ZileanDelayJob {
+public class TopicDelayJob extends BaseZileanJob {
     private static final long serialVersionUID = -7456117880248254519L;
 
     @Override

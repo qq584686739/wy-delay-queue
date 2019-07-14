@@ -1,5 +1,6 @@
 package com.zilean.queue.domain;
 
+import com.zilean.queue.constant.ZileanConstant;
 import com.zilean.queue.exception.ZileanException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,10 +8,10 @@ import org.springframework.util.StringUtils;
 
 import static com.zilean.queue.constant.ZileanConstant.HTTPS_PREFIX;
 import static com.zilean.queue.constant.ZileanConstant.HTTP_PREFIX;
-import static com.zilean.queue.constant.ZileanConstant.MAX_CALLBACK_LENGTH;
-import static com.zilean.queue.constant.ZileanConstant.MAX_ID_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_BODY_LENGTH;
+import static com.zilean.queue.constant.ZileanConstant.MAX_CALLBACK_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_DELAY_15_DAYS;
+import static com.zilean.queue.constant.ZileanConstant.MAX_ID_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
 import static com.zilean.queue.constant.ZileanConstant.OPT_DELETE;
 import static com.zilean.queue.constant.ZileanConstant.OPT_INSERT;
@@ -30,7 +31,7 @@ import static com.zilean.queue.exception.ZileanExceptionEnum.ERROR_ADD_JOB_FOR_P
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SimpleDelayJob extends ZileanDelayJob {
+public class SimpleDelayJob extends BaseZileanJob {
     private static final long serialVersionUID = 8806335947637844682L;
 
     /**
@@ -51,7 +52,7 @@ public class SimpleDelayJob extends ZileanDelayJob {
     /**
      * 回调超时时间，由业务方指控，当然，我们也有默认值
      */
-    private long ttr;
+    private Integer ttr = ZileanConstant.DEFAULT_DELAY_TTR;
 
     @Override
     public void check(int opt) {
@@ -59,7 +60,7 @@ public class SimpleDelayJob extends ZileanDelayJob {
         // TODO: 2019-07-05 check ttr
         switch (opt) {
             case OPT_INSERT:
-                checkDelay();
+                checkDelay(false);
                 checkBody(false);
                 checkCallBack(false);
                 checkHeader(true);
@@ -71,7 +72,7 @@ public class SimpleDelayJob extends ZileanDelayJob {
                 break;
 
             case OPT_UPDATE:
-                checkDelay();
+                checkDelay(true);
                 checkBody(true);
                 checkCallBack(true);
                 checkHeader(true);
@@ -97,7 +98,7 @@ public class SimpleDelayJob extends ZileanDelayJob {
         if (isCallbackValid) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_CALLBACK);
         }
-        if(MAX_CALLBACK_LENGTH < this.callBack.length()){
+        if (MAX_CALLBACK_LENGTH < this.callBack.length()) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_CALLBACK_BEYOND_LENGTH);
         }
     }
@@ -117,17 +118,23 @@ public class SimpleDelayJob extends ZileanDelayJob {
         }
     }
 
-    private void checkDelay() {
-        if (this.delay < 0 || this.delay > MAX_DELAY_15_DAYS) {
-            throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
+    private void checkDelay(boolean canEmpty) {
+        if (canEmpty) {
+            if (this.delay < 0 || this.delay > MAX_DELAY_15_DAYS) {
+                throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
+            }
+        } else {
+            if (this.delay <= 0 || this.delay > MAX_DELAY_15_DAYS) {
+                throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_DELAY);
+            }
         }
     }
 
     private void checkId() {
-        if (null == id || StringUtils.isEmpty(id.trim())) {
+        if (null == delayedId || StringUtils.isEmpty(delayedId.trim())) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID);
         }
-        if(MAX_ID_LENGTH < id.length()){
+        if (MAX_ID_LENGTH < delayedId.length()) {
             throw new ZileanException(ERROR_ADD_JOB_FOR_PARAM_ID_BEYOND_LENGTH);
         }
     }
