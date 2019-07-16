@@ -10,4 +10,5 @@ import com.zilean.queue.service.base.ZileanService;
  * created on 2019-07-14 01:51
  */
 public interface ZileanStatisticsService extends ZileanService<ZileanStatisticsDO> {
+
 }

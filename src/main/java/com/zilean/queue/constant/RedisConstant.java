@@ -13,9 +13,19 @@ public class RedisConstant {
     public static final String PROJECT_NAME = "ZILEAN-QUEUE:";
 
     /**
-     * bucket name
+     * zilean queue
      */
-    public static final String BUCKET_NAME = PROJECT_NAME + "ZILEAN-BUCKET";
+    public static final String ZILEAN_QUEUE = PROJECT_NAME + "ZILEAN-BUCKET";
+
+    /**
+     * ready queue
+     */
+    public static final String READY_QUEUE = PROJECT_NAME + "READY-BUCKET";
+
+    /**
+     * failed queue
+     */
+    public static final String FAILED_QUEUE = PROJECT_NAME + "FAILED-BUCKET";
 
 
     // task lock start

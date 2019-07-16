@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +56,10 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
     public ZileanJobDO insert(ZileanJobDO zileanJobDO) {
         ZileanJobDO insert = super.insert(zileanJobDO);
         delayedQueue.offerAsync(zileanJobDO.getDelayedId(), zileanJobDO.getDelay(), TimeUnit.SECONDS);
+        Iterator<String> iterator = delayedQueue.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
         redissonClient.getAtomicLong(TODAY_DELAYED_KEY).incrementAndGetAsync();
         redissonClient.getAtomicLong(TODAY_DELAYED_TOTAL_KEY).incrementAndGetAsync();
         return insert;
@@ -175,7 +180,6 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
         return super.selectById(id);
     }
 
-
     @Override
     public void cancel(Serializable delayedId) {
         updateStatusByDelayedId(delayedId, StatusEnum.JOB_STATUS_CANCEL.getStatus());
@@ -188,9 +192,10 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
         }
     }
 
-    private ZileanJobDO selectByDelayedId(String delayedId) {
+    public ZileanJobDO selectByDelayedId(String delayedId) {
         ZileanJobDO probe = new ZileanJobDO();
         probe.setDelayedId(delayedId);
+        // TODO: 2019-07-16 请注意，如果delayedId不是唯一的，这里会报错
         Optional<ZileanJobDO> findOpt = zileanJobRepository.findOne(Example.of(probe));
         if (!findOpt.isPresent()) {
             throw new ZileanException(ERROR_FOR_NOT_FOUNT_JOB);

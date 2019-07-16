@@ -1,7 +1,7 @@
 package com.zilean.queue;
 
+import com.zilean.queue.handler.ZileanBucketHandler;
 import com.zilean.queue.handler.ZileanInitHandler;
-import com.zilean.queue.listener.ZileanApplicationListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,20 +21,23 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class ZileanQueueApplication implements CommandLineRunner {
 
     private final ZileanInitHandler zileanInitHandler;
+    private final ZileanBucketHandler zileanBucketHandler;
 
     @Autowired
-    public ZileanQueueApplication(ZileanInitHandler zileanInitHandler) {
+    public ZileanQueueApplication(ZileanInitHandler zileanInitHandler, ZileanBucketHandler zileanBucketHandler) {
         this.zileanInitHandler = zileanInitHandler;
+        this.zileanBucketHandler = zileanBucketHandler;
     }
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(ZileanQueueApplication.class);
-        application.addListeners(new ZileanApplicationListener());
-        application.run(args);
+        new SpringApplication(ZileanQueueApplication.class).run(args);
     }
 
     @Override
     public void run(String... args) throws Exception {
+        // 同步初始化
         zileanInitHandler.run();
+        // 异步监听
+        zileanBucketHandler.run();
     }
 }

@@ -70,9 +70,10 @@ public class ZileanTask {
             RAtomicLong successNumForToday = redissonClient.getAtomicLong(TODAY_SUCCESS_KEY);
             RAtomicLong failedNumForToday = redissonClient.getAtomicLong(TODAY_FAILED_KEY);
 
-
+            Long curTime = ZileanTimeUtil.getCurYearMonthDay();
             ZileanStatisticsDO zileanStatisticsDO = new ZileanStatisticsDO();
-            zileanStatisticsDO.setCreateTime(ZileanTimeUtil.getCurYearMonthDay());
+            zileanStatisticsDO.setCreateTime(curTime);
+            zileanStatisticsDO.setUpdateTime(curTime);
             zileanStatisticsDO.setVer(1);
             zileanStatisticsDO.setStatus(StatusEnum.STATISTICS_STATUS_NORMAL.getStatus());
 
@@ -111,7 +112,7 @@ public class ZileanTask {
         } finally {
             // 我们不再主动释放分布式锁，由TTL主动释放
             // 如果主动释放，可能会由于时间差，第二个进程、第三个进程，继续执行定时任务。
-//             lock.unlock() ;
+            // lock.unlock() ;
         }
 
         log.info("【TASK】ZileanTask.clearCache ...  end  ...");
