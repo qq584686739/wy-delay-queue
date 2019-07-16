@@ -1,5 +1,6 @@
 package com.zilean.queue.service.impl;
 
+
 import com.zilean.queue.dao.ZileanStatisticsRepository;
 import com.zilean.queue.domain.entity.ZileanStatisticsDO;
 import com.zilean.queue.service.ZileanStatisticsService;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class ZileanStatisticsServiceImpl extends AbstractZileanService<ZileanStatisticsRepository, ZileanStatisticsDO> implements ZileanStatisticsService {
+public class ZileanStatisticsServiceImpl
+    extends AbstractZileanService<ZileanStatisticsRepository, ZileanStatisticsDO>
+    implements ZileanStatisticsService {
 
     @Autowired
     private ZileanStatisticsRepository zileanStatisticsRepository;

@@ -1,6 +1,7 @@
 package com.zilean.queue.service.base;
 
 import com.zilean.queue.domain.entity.base.BaseDO;
+import org.springframework.data.domain.Sort;
 
 import java.io.Serializable;
 import java.util.List;
@@ -66,5 +67,14 @@ public interface ZileanService<DO extends BaseDO> {
      */
     Optional<DO> selectById(Serializable id);
 
+    /**
+     * 根据时间范围获取数据
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @param direction 排序方式
+     * @return List<DO>
+     */
+    List<DO> selectRangeByCreateTime(long startTime, long endTime, Sort.Direction direction);
 
 }

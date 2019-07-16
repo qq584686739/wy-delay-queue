@@ -19,4 +19,5 @@ public interface ZileanJobService extends ZileanService<ZileanJobDO> {
      * @param delayedId delayedId
      */
     void cancel(Serializable delayedId);
+
 }

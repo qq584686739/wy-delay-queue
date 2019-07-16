@@ -20,7 +20,7 @@ public class RealTimeMonitorVO implements Serializable {
     private List<Monitor> monitorList;
 
     @Data
-    public class Monitor {
+    public static class Monitor {
         private String time;
         private Long num;
     }

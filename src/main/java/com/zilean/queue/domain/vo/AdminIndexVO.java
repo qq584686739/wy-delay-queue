@@ -67,6 +67,10 @@ public class AdminIndexVO implements Serializable {
          */
         private Long ready;
         /**
+         * 成功数
+         */
+        private Long success;
+        /**
          * 失败数
          */
         private Long failed;

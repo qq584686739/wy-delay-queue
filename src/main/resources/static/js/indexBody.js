@@ -54,8 +54,7 @@ function dailyVisits(data) {
         seriesForVisit.push(data[i].visit);
         seriesForDelayed.push(data[i].delayed);
         seriesForReady.push(data[i].ready);
-        // todo 成功数的问题
-        seriesForSuccess.push(data[i].delayed);
+        seriesForSuccess.push(data[i].success);
         seriesForFailed.push(data[i].failed);
     }
     dailyVisitsMainOption = {
