@@ -28,7 +28,7 @@ public class ZileanUtil {
         }
     }
 
-    public static <DO extends BaseDO> void defaultUpdatetValueForBaseDO(DO d) {
+    public static <DO extends BaseDO> void defaultUpdateValueForBaseDO(DO d) {
         long curTime = ZileanTimeUtil.getCurTime();
         d.setUpdateTime(curTime);
         d.setVer(d.getVer() + 1);

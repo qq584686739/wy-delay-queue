@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zilean.queue.dao.ZileanJobRepository;
 import com.zilean.queue.domain.entity.ZileanJobDO;
+import com.zilean.queue.domain.response.BusinessResponse;
 import com.zilean.queue.enums.StatusEnum;
 import com.zilean.queue.redis.RedissonUtil;
 import com.zilean.queue.service.impl.ZileanJobServiceImpl;
@@ -21,12 +22,18 @@ import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
+import static com.zilean.queue.constant.RedisConstant.FAILED_QUEUE;
 import static com.zilean.queue.constant.RedisConstant.READY_QUEUE;
 import static com.zilean.queue.constant.RedisConstant.TODAY_DELAYED_KEY;
+import static com.zilean.queue.constant.RedisConstant.TODAY_FAILED_KEY;
+import static com.zilean.queue.constant.RedisConstant.TODAY_FAILED_TOTAL_KEY;
 import static com.zilean.queue.constant.RedisConstant.TODAY_READY_KEY;
 import static com.zilean.queue.constant.RedisConstant.TODAY_READY_TOTAL_KEY;
+import static com.zilean.queue.constant.RedisConstant.TODAY_SUCCESS_KEY;
+import static com.zilean.queue.constant.RedisConstant.TODAY_SUCCESS_TOTAL_KEY;
 import static com.zilean.queue.constant.RedisConstant.ZILEAN_QUEUE;
 
 
@@ -42,6 +49,7 @@ public class ZileanBucketHandler implements Runnable {
     private RedissonClient redissonClient = RedissonUtil.getRedissonClient();
     private RBlockingQueue<String> bucket = redissonClient.getBlockingQueue(ZILEAN_QUEUE);
     private RBlockingQueue<String> readyQueue = redissonClient.getBlockingQueue(READY_QUEUE);
+    private RBlockingQueue<String> failedQueue = redissonClient.getBlockingQueue(FAILED_QUEUE);
 
     RDelayedQueue<String> delayedQueue = redissonClient.getDelayedQueue(bucket);
 
@@ -59,7 +67,7 @@ public class ZileanBucketHandler implements Runnable {
     public void run() {
         // TODO: 2019-07-02 在考虑在理的日志是否需要加上 host、hostName、port
         // 延迟队列监听
-        ThreadPoolExecutorUtil.newFixedThreadPool(1).execute(() -> {
+        ThreadPoolExecutorUtil.newSingleThreadPool().execute(() -> {
             log.info("[handle]zilean delay handler running...");
             for (; ; ) {
                 listenDelay();
@@ -67,7 +75,7 @@ public class ZileanBucketHandler implements Runnable {
         });
 
         // 读取队列监听
-        ThreadPoolExecutorUtil.newFixedThreadPool(1).execute(() -> {
+        ThreadPoolExecutorUtil.newSingleThreadPool().execute(() -> {
             log.info("[handle]zilean ready handler running...");
             for (; ; ) {
                 listenReady();
@@ -75,7 +83,7 @@ public class ZileanBucketHandler implements Runnable {
         });
 
         // 失败队列监听
-        ThreadPoolExecutorUtil.newFixedThreadPool(1).execute(() -> {
+        ThreadPoolExecutorUtil.newSingleThreadPool().execute(() -> {
             log.info("[handle]zilean failed handler running...");
             for (; ; ) {
                 listenFailed();
@@ -87,69 +95,106 @@ public class ZileanBucketHandler implements Runnable {
     }
 
     private void listenReady() {
-        String take;
+        String delayedId;
         try {
-            take = readyQueue.take();
+            delayedId = readyQueue.take();
         } catch (InterruptedException e) {
             log.error("[handle]ZileanBucketHandler.listenReady take error!", e);
             return;
         }
-        execReady.execute(() -> doReadyJob(take));
+        execReady.execute(() -> doReadyJob(delayedId));
     }
 
-    private void doReadyJob(String take) {
+    private void doReadyJob(String delayedId) {
         ZileanJobDO zileanJobDO;
         try {
-            zileanJobDO = zileanJobServiceImpl.selectByDelayedId(take);
+            zileanJobDO = zileanJobServiceImpl.selectByDelayedId(delayedId);
         } catch (Exception e) {
             // 延迟队列的delayedId在数据库找不到数据，直接丢弃。
-            log.error("[handle]消费队列读取到的数据无法在数据库找到数据,跳过。take:{}.", take);
+            log.error("[handle]消费队列读取到的数据无法在数据库找到数据,跳过。delayedId:{}.", delayedId);
             return;
         }
-        HttpUtil httpUtil;
 
+        HttpUtil httpUtil;
         String url = zileanJobDO.getCallBack();
         String headerStr = zileanJobDO.getHeader();
         String bodyStr = zileanJobDO.getBody();
         Map<String, String> body = new HashMap<>(1);
         body.put("body", bodyStr);
 
-
         if (StringUtils.isEmpty(headerStr)) {
             httpUtil = new HttpUtil(url, body);
         } else {
+            // TODO: 2019-07-17 入参的header需要保证是json字符串
             JSONObject header = JSONObject.parseObject(headerStr);
             httpUtil = new HttpUtil(url, (Map) header, body);
         }
 
+        // TODO: 2019-07-17 ttl是必须值 ， 要么有默认值
         httpUtil.setTimeout(zileanJobDO.getTtr());
         HttpUtil.HttpResult result = httpUtil.request();
-        // TODO: 2019-07-16  已经消费，当前读取队列数量-1
-        if (null == result) {
-            // TODO: 2019-07-16 记录请求日志
-            // TODO: 2019-07-16 记录返回日志
-            intoFailedQueue(take);
+        String requestStr = JSON.toJSONString(httpUtil);
+        log.info("[handle]ZileanBucketHandler.doReadyJob request:{}; response:{}.", requestStr, result);
+        RAtomicLong todayReadyAtomicLong = redissonClient.getAtomicLong(TODAY_READY_KEY);
+        if (todayReadyAtomicLong.get() > 0) {
+            // 读取消费队列-1
+            todayReadyAtomicLong.decrementAndGet();
+        }
+
+        if (null == result || Objects.isNull(result.getResponseBody())) {
+            log.error("[handle]ZileanBucketHandler.doReadyJob request:{}; but response is empty!", requestStr);
+            intoFailedQueue(delayedId);
             return;
         }
         String response = result.getResponseBodyString("UTF-8");
-
-        // TODO: 2019-07-16 记录请求日志
-        // TODO: 2019-07-16 记录返回日志
-
         if (StringUtils.isEmpty(response)) {
-            intoFailedQueue(take);
+            // 业务方返回为空，进入失败队列
+            log.error("[handle]ZileanBucketHandler.doReadyJob request:{}; but response is empty!", requestStr);
+            intoFailedQueue(delayedId);
+            return;
+        }
+        BusinessResponse businessResponse;
+        try {
+            businessResponse = JSONObject.parseObject(response, BusinessResponse.class);
+        } catch (Exception e) {
+            // 业务方返回数据格式不对
+            log.error("[handle]ZileanBucketHandler.doReadyJob request:{}; but response format json error! response:{}.", requestStr, response);
+            intoFailedQueue(delayedId);
+            return;
+        }
+        if (null == businessResponse || null == businessResponse.getCode() || 0 != businessResponse.getCode()) {
+            log.error("[handle]ZileanBucketHandler.doReadyJob request:{}; but response code != 0 ! response:{}.", requestStr, JSON.toJSONString(businessResponse));
+            intoFailedQueue(delayedId);
             return;
         }
 
-        // TODO: 2019-07-16 修改状态
-        // TODO: 2019-07-16 成功队列+1
+        if (StringUtils.isEmpty(zileanJobDO.getResponse())) {
+            Map<String, String> responseMap = new HashMap<>(1);
+            responseMap.put("1", response);
+            zileanJobDO.setResponse(JSON.toJSONString(responseMap));
+        } else {
+            JSONObject responseMap = JSON.parseObject(zileanJobDO.getResponse());
+            responseMap.put(String.valueOf(responseMap.size() + 1), response);
+            zileanJobDO.setResponse(JSON.toJSONString(responseMap));
+        }
+        ZileanUtil.defaultUpdateValueForBaseDO(zileanJobDO);
+        zileanJobDO.setStatus(StatusEnum.JOB_STATUS_FINISH.getStatus());
+        zileanJobServiceImpl.updateById(zileanJobDO);
 
+        redissonClient.getAtomicLong(TODAY_SUCCESS_KEY).incrementAndGetAsync();
+        redissonClient.getAtomicLong(TODAY_SUCCESS_TOTAL_KEY).incrementAndGetAsync();
     }
 
     private void intoFailedQueue(String delayedId) {
-        // 进入失败队列
-        // TODO: 2019-07-16 修改状态，更新时间，版本
-        log.error("");
+
+        zileanJobServiceImpl.updateStatusByDelayedId(delayedId, StatusEnum.JOB_STATUS_FAILED.getStatus(), false);
+
+        failedQueue.add(delayedId);
+
+        redissonClient.getAtomicLong(TODAY_FAILED_KEY).incrementAndGetAsync();
+        redissonClient.getAtomicLong(TODAY_FAILED_TOTAL_KEY).incrementAndGetAsync();
+
+
     }
 
     private void listenDelay() {
@@ -186,7 +231,7 @@ public class ZileanBucketHandler implements Runnable {
             return;
         }
         zileanJobDO.setStatus(StatusEnum.JOB_STATUS_READY.getStatus());
-        ZileanUtil.defaultUpdatetValueForBaseDO(zileanJobDO);
+        ZileanUtil.defaultUpdateValueForBaseDO(zileanJobDO);
         zileanJobRepository.save(zileanJobDO);
 
         if (!readyQueue.add(take)) {

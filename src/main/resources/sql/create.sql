@@ -6,20 +6,21 @@ USE db_zilean;
 CREATE TABLE db_zilean.tbl_zilean_queue
 (
     id          BIGINT(20) AUTO_INCREMENT PRIMARY KEY COMMENT '自增主键id',
-    delayed_id  VARCHAR(40)             NOT NULL COMMENT '延迟id',
-    name        VARCHAR(40)             NOT NULL COMMENT '延迟任务名称',
-    delay       INT(11)                 NOT NULL COMMENT '延迟时间',
-    call_back   VARCHAR(200)            NOT NULL COMMENT '回调地址，http://,https://',
-    header      VARCHAR(200)  DEFAULT '' COMMENT '回调请求头，json格式',
-    body        VARCHAR(2000) DEFAULT '' COMMENT '回调请求体，任意格式',
-    status      INT(4)        DEFAULT 1 NOT NULL COMMENT '延迟状态：1delayed、2ready、3failed、4finish、5delete、6cancel',
-    create_time BIGINT(20)              NOT NULL COMMENT '创建时间:yyyyMMddHHmmss',
-    update_time BIGINT(20)              NOT NULL COMMENT '更新时间:yyyyMMddHHmmss',
-    ver         INT(11)       DEFAULT 1 NOT NULL COMMENT '版本号',
-    token_id    BIGINT(20)              NOT NULL COMMENT 'token_id',
-    ttr         INT(11)                 NOT NULL COMMENT '回调超时时间',
-    retry_time  INT(4)        DEFAULT 0 NOT NULL COMMENT '重试次数',
-    type        INT(4)        DEFAULT 1 NOT NULL COMMENT '任务类型：1simple'
+    delayed_id  VARCHAR(40)              NOT NULL COMMENT '延迟id',
+    name        VARCHAR(40)              NOT NULL COMMENT '延迟任务名称',
+    delay       INT(11)                  NOT NULL COMMENT '延迟时间',
+    call_back   VARCHAR(200)             NOT NULL COMMENT '回调地址，http://,https://',
+    header      VARCHAR(200)  DEFAULT '' NOT NULL COMMENT '回调请求头，json格式',
+    body        VARCHAR(2000) DEFAULT '' NOT NULL COMMENT '回调请求体，任意格式',
+    status      INT(4)        DEFAULT 1  NOT NULL COMMENT '延迟状态：1delayed、2ready、3failed、4finish、5delete、6cancel',
+    create_time BIGINT(20)               NOT NULL COMMENT '创建时间:yyyyMMddHHmmss',
+    update_time BIGINT(20)               NOT NULL COMMENT '更新时间:yyyyMMddHHmmss',
+    ver         INT(11)       DEFAULT 1  NOT NULL COMMENT '版本号',
+    token_id    BIGINT(20)               NOT NULL COMMENT 'token_id',
+    ttr         INT(11)                  NOT NULL COMMENT '回调超时时间',
+    retry_time  INT(4)        DEFAULT 0  NOT NULL COMMENT '重试次数',
+    type        INT(4)        DEFAULT 1  NOT NULL COMMENT '任务类型：1simple',
+    response    varchar(200)  DEFAULT '' COMMENT 'response'
 ) ENGINE = InnoDB
   CHARSET = utf8 COMMENT '延迟任务表';
 CREATE INDEX idx_create_time ON db_zilean.tbl_zilean_queue (create_time);

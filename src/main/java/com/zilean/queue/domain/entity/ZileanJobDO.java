@@ -91,4 +91,10 @@ public class ZileanJobDO extends BaseDO {
     @Column(name = "type", nullable = false)
     private Integer type;
 
+    /**
+     * response，json格式
+     */
+    @Column(name = "response", nullable = true)
+    private String response;
+
 }

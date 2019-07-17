@@ -56,10 +56,6 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
     public ZileanJobDO insert(ZileanJobDO zileanJobDO) {
         ZileanJobDO insert = super.insert(zileanJobDO);
         delayedQueue.offerAsync(zileanJobDO.getDelayedId(), zileanJobDO.getDelay(), TimeUnit.SECONDS);
-        Iterator<String> iterator = delayedQueue.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
         redissonClient.getAtomicLong(TODAY_DELAYED_KEY).incrementAndGetAsync();
         redissonClient.getAtomicLong(TODAY_DELAYED_TOTAL_KEY).incrementAndGetAsync();
         return insert;
@@ -68,7 +64,7 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteById(Serializable delayedId) {
-        updateStatusByDelayedId(delayedId, StatusEnum.JOB_STATUS_DELETE.getStatus());
+        updateStatusByDelayedId(delayedId, StatusEnum.JOB_STATUS_DELETE.getStatus(), true);
     }
 
     @Override
@@ -182,7 +178,7 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
 
     @Override
     public void cancel(Serializable delayedId) {
-        updateStatusByDelayedId(delayedId, StatusEnum.JOB_STATUS_CANCEL.getStatus());
+        updateStatusByDelayedId(delayedId, StatusEnum.JOB_STATUS_CANCEL.getStatus(), true);
     }
 
     private void containsDelayedCacheByDelayedId(String delayedId) {
@@ -192,6 +188,7 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
         }
     }
 
+    @Override
     public ZileanJobDO selectByDelayedId(String delayedId) {
         ZileanJobDO probe = new ZileanJobDO();
         probe.setDelayedId(delayedId);
@@ -203,14 +200,19 @@ public class ZileanJobServiceImpl extends AbstractZileanService<ZileanJobReposit
         return findOpt.get();
     }
 
-    private void updateStatusByDelayedId(Serializable delayedId, int status) {
+    @Override
+    public void updateStatusByDelayedId(Serializable delayedId, int status, boolean checkCache) {
         String delayedIdStr = String.valueOf(delayedId);
-        containsDelayedCacheByDelayedId(delayedIdStr);
+        if (checkCache) {
+            containsDelayedCacheByDelayedId(delayedIdStr);
+        }
         ZileanJobDO zileanJobDO = selectByDelayedId(delayedIdStr);
         zileanJobDO.setStatus(status);
         super.updateById(zileanJobDO);
-        if (!delayedQueue.remove(delayedIdStr)) {
-            throw new ZileanException(ERROR_UPDATE_JOB);
+        if (checkCache) {
+            if (!delayedQueue.remove(delayedIdStr)) {
+                throw new ZileanException(ERROR_UPDATE_JOB);
+            }
         }
     }
 }

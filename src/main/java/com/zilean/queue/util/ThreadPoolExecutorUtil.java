@@ -97,6 +97,17 @@ public class ThreadPoolExecutorUtil {
         );
     }
 
+    public static ExecutorService newSingleThreadPool() {
+        return new ThreadPoolExecutor(
+            1,
+            1,
+            0L,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>(),
+            DEFAULT_THREAD_FACTORY
+        );
+    }
+
     static class MyThreadFactory implements ThreadFactory {
 
         @Override

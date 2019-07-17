@@ -58,7 +58,7 @@ public abstract class AbstractZileanService<T extends JpaRepository, DO extends 
 
     @Override
     public DO updateById(DO d) {
-        ZileanUtil.defaultUpdatetValueForBaseDO(d);
+        ZileanUtil.defaultUpdateValueForBaseDO(d);
         return (DO) jpaRepository().save(d);
     }
 

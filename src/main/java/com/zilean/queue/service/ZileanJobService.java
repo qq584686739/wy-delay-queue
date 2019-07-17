@@ -20,4 +20,20 @@ public interface ZileanJobService extends ZileanService<ZileanJobDO> {
      */
     void cancel(Serializable delayedId);
 
+    /**
+     * 根据delayedId查找延迟任务
+     *
+     * @param delayedId delayedId
+     * @return ZileanJobDO
+     */
+    ZileanJobDO selectByDelayedId(String delayedId);
+
+    /**
+     * 根据delayedId更新延迟任务状态
+     *
+     * @param delayedId delayedId
+     * @param status    status
+     */
+    void updateStatusByDelayedId(Serializable delayedId, int status, boolean checkCache);
+
 }
