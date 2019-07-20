@@ -1,6 +1,6 @@
 package com.zilean.queue.aop;
 
-import com.zilean.queue.redis.RedissonUtil;
+import com.zilean.queue.util.RedissonUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

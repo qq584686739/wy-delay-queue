@@ -15,6 +15,9 @@ public class ZileanConstant {
     public static final int MAX_BODY_LENGTH = 2000;
     public static final int MAX_ID_LENGTH = 20;
     public static final int MAX_CALLBACK_LENGTH = 200;
+    public static final int MAX_HEADER_LENGTH = 200;
+    public static final int MIN_TTR_TIMEOUT = 500;          // 最小的超时时间
+    public static final int MAX_TTR_TIMEOUT = 10000;        // 最大的超时时间
 
     public static final String[] INVALID_SIGIN = new String[]{"@", "#", "$", "%", "^", "&", "*"};
 

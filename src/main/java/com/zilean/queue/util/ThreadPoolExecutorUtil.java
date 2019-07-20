@@ -19,17 +19,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThreadPoolExecutorUtil {
 
-    // TODO: 2019-07-04 线程池全部要设置下限与上线
-
     private static final Logger logger = LoggerFactory.getLogger(ThreadPoolExecutorUtil.class);
 
     private static final int DEFAULT_LIMIT = 10;
+    private static final int DEFAULT_MAX_POOL_SIZE = 60;
 
     private static final MyThreadFactory DEFAULT_THREAD_FACTORY = new MyThreadFactory();
 
     private static final ThreadPoolExecutor DEFAULT_THREAD_POOL = new ThreadPoolExecutor(
         0,
-        Integer.MAX_VALUE,
+        DEFAULT_MAX_POOL_SIZE,
         60L,
         TimeUnit.SECONDS,
         new SynchronousQueue<>(),
@@ -74,7 +73,7 @@ public class ThreadPoolExecutorUtil {
     public static ExecutorService newCachedThreadPool() {
         return new ThreadPoolExecutor(
             0,
-            Integer.MAX_VALUE,
+            DEFAULT_MAX_POOL_SIZE,
             60L,
             TimeUnit.SECONDS,
             new SynchronousQueue<>(),

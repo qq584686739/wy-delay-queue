@@ -6,9 +6,9 @@ import com.zilean.queue.dao.ZileanJobRepository;
 import com.zilean.queue.domain.entity.ZileanJobDO;
 import com.zilean.queue.domain.response.BusinessResponse;
 import com.zilean.queue.enums.StatusEnum;
-import com.zilean.queue.redis.RedissonUtil;
 import com.zilean.queue.service.impl.ZileanJobServiceImpl;
 import com.zilean.queue.util.HttpUtil;
+import com.zilean.queue.util.RedissonUtil;
 import com.zilean.queue.util.ThreadPoolExecutorUtil;
 import com.zilean.queue.util.ZileanUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -125,16 +125,14 @@ public class ZileanBucketHandler implements Runnable {
         if (StringUtils.isEmpty(headerStr)) {
             httpUtil = new HttpUtil(url, body);
         } else {
-            // TODO: 2019-07-17 入参的header需要保证是json字符串
             JSONObject header = JSONObject.parseObject(headerStr);
             httpUtil = new HttpUtil(url, (Map) header, body);
         }
 
-        // TODO: 2019-07-17 ttl是必须值 ， 要么有默认值
         httpUtil.setTimeout(zileanJobDO.getTtr());
         HttpUtil.HttpResult result = httpUtil.request();
         String requestStr = JSON.toJSONString(httpUtil);
-        log.info("[handle]ZileanBucketHandler.doReadyJob request:{}; response:{}.", requestStr, result);
+        log.info("[handle]ZileanBucketHandler.doReadyJob request:{}; response:{}.", requestStr, JSON.toJSONString(result));
         RAtomicLong todayReadyAtomicLong = redissonClient.getAtomicLong(TODAY_READY_KEY);
         if (todayReadyAtomicLong.get() > 0) {
             // 读取消费队列-1
@@ -186,15 +184,12 @@ public class ZileanBucketHandler implements Runnable {
     }
 
     private void intoFailedQueue(String delayedId) {
-
+        // update db
         zileanJobServiceImpl.updateStatusByDelayedId(delayedId, StatusEnum.JOB_STATUS_FAILED.getStatus(), false);
-
+        // into failed queue
         failedQueue.add(delayedId);
-
         redissonClient.getAtomicLong(TODAY_FAILED_KEY).incrementAndGetAsync();
         redissonClient.getAtomicLong(TODAY_FAILED_TOTAL_KEY).incrementAndGetAsync();
-
-
     }
 
     private void listenDelay() {
@@ -225,7 +220,8 @@ public class ZileanBucketHandler implements Runnable {
             log.error("[handle]延迟队列进入读取消费队列失败！查找数据库报错！delayedId:{}.", take, e);
             return;
         }
-        if (StatusEnum.JOB_STATUS_DELAYED.getStatus() != zileanJobDO.getStatus()) {
+        if (null == zileanJobDO ||
+            StatusEnum.JOB_STATUS_DELAYED.getStatus() != zileanJobDO.getStatus()) {
             // 状态已经不是延迟状态了，数据不一致，本次执行中断
             log.warn("[handle]延迟队列进入读取消费队列失败！数据库状态已经不是延迟状态:{}.", JSON.toJSONString(zileanJobDO));
             return;

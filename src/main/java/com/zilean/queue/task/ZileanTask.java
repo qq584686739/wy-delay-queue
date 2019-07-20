@@ -3,7 +3,7 @@ package com.zilean.queue.task;
 import com.zilean.queue.dao.ZileanStatisticsRepository;
 import com.zilean.queue.domain.entity.ZileanStatisticsDO;
 import com.zilean.queue.enums.StatusEnum;
-import com.zilean.queue.redis.RedissonUtil;
+import com.zilean.queue.util.RedissonUtil;
 import com.zilean.queue.util.ZileanTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RAtomicLong;
@@ -100,9 +100,6 @@ public class ZileanTask {
             readyNumForToday.setAsync(0L);
             successNumForToday.setAsync(0L);
             failedNumForToday.setAsync(0L);
-
-            // TODO: 2019-07-13 成功消费后记得记录成功条数
-
         } catch (InterruptedException e) {
             log.info("【TASK】ZileanTask.clearCache ... InterruptedException ...", e);
             return;

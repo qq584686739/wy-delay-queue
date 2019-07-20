@@ -9,9 +9,9 @@ import com.zilean.queue.domain.vo.AdminIndexVO;
 import com.zilean.queue.domain.vo.RealTimeMonitorVO;
 import com.zilean.queue.enums.DelayEnum;
 import com.zilean.queue.enums.StatusEnum;
-import com.zilean.queue.redis.RedissonUtil;
 import com.zilean.queue.service.impl.ZileanJobServiceImpl;
 import com.zilean.queue.service.impl.ZileanStatisticsServiceImpl;
+import com.zilean.queue.util.RedissonUtil;
 import com.zilean.queue.util.ZileanTimeUtil;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
@@ -110,9 +110,12 @@ public class ZileanAdminController {
     @GetMapping("/realTimeMonitorHistory")
     public ZileanResponse realTimeMonitorHistory() {
 
+
+        // TODO: 2019-07-18 数据不对，且数据不全，有的是716，有的是718
+
+
         // TODO: 2019-07-15 这种形式数据不准确
 
-        // TODO: 2019-07-15 list倒置
 
         List<ZileanJobDO> dataList = zileanJobServiceImpl.selectRangeByCreateTime(
             1L, ZileanTimeUtil.getCurTime(), Sort.Direction.DESC);

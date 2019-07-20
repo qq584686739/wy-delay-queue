@@ -34,7 +34,7 @@ public class ZileanQueueApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         // 同步初始化
         zileanInitHandler.run();
         // 异步监听

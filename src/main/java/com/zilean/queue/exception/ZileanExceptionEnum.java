@@ -2,7 +2,10 @@ package com.zilean.queue.exception;
 
 import static com.zilean.queue.constant.ZileanConstant.MAX_BODY_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_CALLBACK_LENGTH;
+import static com.zilean.queue.constant.ZileanConstant.MAX_HEADER_LENGTH;
 import static com.zilean.queue.constant.ZileanConstant.MAX_ID_LENGTH;
+import static com.zilean.queue.constant.ZileanConstant.MAX_TTR_TIMEOUT;
+import static com.zilean.queue.constant.ZileanConstant.MIN_TTR_TIMEOUT;
 
 /**
  * 描述:
@@ -19,7 +22,13 @@ public enum ZileanExceptionEnum {
     ERROR_ADD_JOB_FOR_PARAM_CALLBACK(10010004, "callback not valid, it should be a http url!"),
     ERROR_ADD_JOB_FOR_PARAM_CALLBACK_BEYOND_LENGTH(10010005, "callback beyond " + MAX_CALLBACK_LENGTH + "!"),
     ERROR_ADD_JOB_FOR_PARAM_BODY(10010006, "body not valid, can not empty or length beyond " + MAX_BODY_LENGTH + "!"),
-    ERROR_ADD_JOB_FOR_PUBLISH_JOB_ERROR(10010007, "publish job error!"),
+    ERROR_ADD_JOB_FOR_PARAM_HEADER_EMPTY(10010007, "header not empty!"),
+    ERROR_ADD_JOB_FOR_PARAM_HEADER_BEYOND_LENGTH(10010008, "header beyond " + MAX_HEADER_LENGTH + "!"),
+    ERROR_ADD_JOB_FOR_PARAM_HEADER_FORMAT_ERROR(10010009, "header format json error!"),
+    ERROR_ADD_JOB_FOR_PARAM_HEADER_SPECIAL_CHARACTERS(100100010, "header has special characters!"),
+    ERROR_ADD_JOB_FOR_PARAM_HEADER_DECODE_ERROR(100100011, "header decode error!"),
+    ERROR_ADD_JOB_FOR_PUBLISH_DELAYED_ID_EXIST(10010012, "publish job error! delayId already exists!"),
+    ERROR_ADD_JOB_FOR_PUBLISH_TTR_TIMEOUT_BEYOND(10010013, "publish错误，ttr取值范围为：[" + MIN_TTR_TIMEOUT + "," + MAX_TTR_TIMEOUT + "]"),
 
     // append job error
     ERROR_APPEND_JOB(10020001, "append job error!"),

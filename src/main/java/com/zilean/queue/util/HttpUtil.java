@@ -392,11 +392,11 @@ public class HttpUtil {
         @Override
         public String toString() {
             return "HttpResult{" +
-                    "mResponseCode=" + mResponseCode +
-                    ", mResponseHead=" + mResponseHead +
-                    ", mResponseBody=" + Arrays.toString(mResponseBody) +
-                    ", exception=" + exception +
-                    '}';
+                "mResponseCode=" + mResponseCode +
+                ", mResponseHead=" + mResponseHead +
+                ", mResponseBody=" + Arrays.toString(mResponseBody) +
+                ", exception=" + exception +
+                '}';
         }
     }
 

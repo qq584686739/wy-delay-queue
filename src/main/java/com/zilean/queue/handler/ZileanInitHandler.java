@@ -3,7 +3,7 @@ package com.zilean.queue.handler;
 import com.zilean.queue.dao.ZileanJobRepository;
 import com.zilean.queue.dao.ZileanStatisticsRepository;
 import com.zilean.queue.domain.entity.ZileanStatisticsDO;
-import com.zilean.queue.redis.RedissonUtil;
+import com.zilean.queue.util.RedissonUtil;
 import com.zilean.queue.util.ThreadPoolExecutorUtil;
 import com.zilean.queue.util.ZileanTimeUtil;
 import lombok.extern.slf4j.Slf4j;

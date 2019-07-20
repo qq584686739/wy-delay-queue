@@ -1,4 +1,4 @@
-package com.zilean.queue.redis;
+package com.zilean.queue.util;
 
 import org.redisson.Redisson;
 import org.redisson.api.RAtomicLong;

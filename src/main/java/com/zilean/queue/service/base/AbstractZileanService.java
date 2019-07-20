@@ -1,7 +1,7 @@
 package com.zilean.queue.service.base;
 
 import com.zilean.queue.domain.entity.base.BaseDO;
-import com.zilean.queue.redis.RedissonUtil;
+import com.zilean.queue.util.RedissonUtil;
 import com.zilean.queue.util.ZileanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;

@@ -4,14 +4,11 @@ import com.zilean.queue.domain.SimpleDelayJob;
 import com.zilean.queue.domain.entity.ZileanJobDO;
 import com.zilean.queue.domain.response.ZileanResponse;
 import com.zilean.queue.service.impl.ZileanJobServiceImpl;
-import com.zilean.queue.util.ThreadPoolExecutorUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.ExecutorService;
 
 import static com.zilean.queue.constant.ZileanConstant.OPT_APPEND;
 import static com.zilean.queue.constant.ZileanConstant.OPT_DELETE;
@@ -28,29 +25,14 @@ import static com.zilean.queue.constant.ZileanConstant.OPT_UPDATE;
 @RequestMapping("/client")
 public class ZileanClientController {
 
-    // TODO: 2019-07-14 这俩线程池给干掉
-    /**
-     * add exec
-     */
-    private final ExecutorService addExec = ThreadPoolExecutorUtil.newCachedThreadPool();
-
-    /**
-     * add result exec
-     */
-    private final ExecutorService addResultExec = ThreadPoolExecutorUtil.newCachedThreadPool();
-
-    // TODO: 2019-07-14 面对接口开发
     @Autowired
     private ZileanJobServiceImpl zileanJobServiceImpl;
-
-    // TODO: 2019-07-04 add logback.xml
 
     // TODO: 2019-07-03 readme文件
     // TODO: 2019-07-03 准备local dev test prod 环境
     // TODO: 2019-07-03 完善pom文件其他信息
 
 
-    // TODO: 2019-07-02 做防重复提交
     // TODO: 2019-07-01 post，最后需要改成post方式，临时写成get测试
     // TODO: 2019-07-04 回调需要设置timeout 重试机制 失败队列
 
